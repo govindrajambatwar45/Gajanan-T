@@ -1,0 +1,53 @@
+[
+  {
+    "id": "QTN-2026-002",
+    "date": "2026-09-29",
+    "enquiryId": "ENQ-2026-003",
+    "customerName": "Suresh Shinde",
+    "customerPhone": "+91 9922334455",
+    "subtotal": 30000,
+    "totalGst": 5400,
+    "grandTotal": 35400,
+    "status": "Accepted"
+  },
+  {
+    "id": "QTN-2026-001",
+    "enquiryId": "ENQ-2026-002",
+    "customerName": "Anand Pawar",
+    "customerPhone": "+91 9823456789",
+    "customerAddress": "VIP Road, Nanded",
+    "date": "2026-09-29",
+    "validUntil": "2026-10-15",
+    "items": [
+      {
+        "productId": "PRD-002",
+        "description": "JSW Coloron+ Roofing Sheet (Terracotta Red, 0.40 mm)",
+        "unit": "sq ft",
+        "quantity": 15,
+        "lengthFt": 10,
+        "widthFt": 3.5,
+        "totalSqFt": 525,
+        "rate": 58,
+        "amount": 30450
+      },
+      {
+        "productId": "PRD-009",
+        "description": "Self-Drilling Screws with EPDM Washers (100 Pcs Box)",
+        "unit": "box",
+        "quantity": 2,
+        "rate": 350,
+        "amount": 700
+      }
+    ],
+    "subtotal": 31150,
+    "discount": 500,
+    "taxableAmount": 30650,
+    "gstRate": 18,
+    "cgst": 2758.5,
+    "sgst": 2758.5,
+    "totalGst": 5517,
+    "grandTotal": 36167,
+    "status": "Sent",
+    "notes": "Price includes complimentary loading at Naigaon Bz warehouse."
+  }
+]
