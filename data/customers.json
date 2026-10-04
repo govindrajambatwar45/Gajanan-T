@@ -1,0 +1,50 @@
+[
+  {
+    "id": "CUST-004",
+    "name": "Suresh Shinde",
+    "phone": "+91 9922334455",
+    "address": "Naigaon Bz",
+    "city": "Naigaon Bz",
+    "pincode": "431709",
+    "customerType": "Retail Homeowner",
+    "totalOrders": 1,
+    "totalSpent": 35400,
+    "createdAt": "2026-09-29T18:40:53.558Z"
+  },
+  {
+    "id": "CUST-001",
+    "name": "Ramesh Patil",
+    "phone": "+91 9876543210",
+    "address": "Opposite Gram Panchayat, Naigaon Bz",
+    "city": "Naigaon Bz",
+    "pincode": "431709",
+    "customerType": "Retail Homeowner",
+    "totalOrders": 2,
+    "totalSpent": 64428,
+    "createdAt": "2026-09-13T10:00:00.000Z"
+  },
+  {
+    "id": "CUST-002",
+    "name": "Ganesh Deshmukh",
+    "phone": "+91 9422187654",
+    "address": "Near Bus Stand, Naigaon Bz",
+    "city": "Naigaon Bz",
+    "pincode": "431709",
+    "customerType": "Contractor",
+    "totalOrders": 0,
+    "totalSpent": 0,
+    "createdAt": "2026-09-28T10:15:00.000Z"
+  },
+  {
+    "id": "CUST-003",
+    "name": "Anand Pawar",
+    "phone": "+91 9823456789",
+    "address": "VIP Road, Nanded",
+    "city": "Nanded",
+    "pincode": "431602",
+    "customerType": "Commercial Builder",
+    "totalOrders": 0,
+    "totalSpent": 0,
+    "createdAt": "2026-09-29T14:20:00.000Z"
+  }
+]
