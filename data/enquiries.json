@@ -1,0 +1,42 @@
+[
+  {
+    "id": "ENQ-2026-003",
+    "customerName": "Suresh Shinde",
+    "phone": "+91 9922334455",
+    "city": "Naigaon Bz",
+    "brandPreference": "TATA Shaktee",
+    "message": "Need 15 sheets of 14ft Royal Blue 0.45mm",
+    "status": "Quoted",
+    "createdAt": "2026-09-29T18:40:53.557Z"
+  },
+  {
+    "id": "ENQ-2026-001",
+    "customerName": "Ganesh Deshmukh",
+    "phone": "+91 9422187654",
+    "city": "Naigaon Bz",
+    "brandPreference": "TATA Shaktee",
+    "requiredColor": "Royal Blue",
+    "sheetLengthFt": 14,
+    "sheetWidthFt": 3.5,
+    "quantity": 20,
+    "thickness": "0.45 mm",
+    "message": "Need delivery near Naigaon bus stand for agricultural shed construction.",
+    "status": "New",
+    "createdAt": "2026-09-28T10:15:00.000Z"
+  },
+  {
+    "id": "ENQ-2026-002",
+    "customerName": "Anand Pawar",
+    "phone": "+91 9823456789",
+    "city": "Nanded",
+    "brandPreference": "JSW Pragati",
+    "requiredColor": "Terracotta Red",
+    "sheetLengthFt": 10,
+    "sheetWidthFt": 3.5,
+    "quantity": 15,
+    "thickness": "0.40 mm",
+    "message": "Quotation required for commercial shop roofing.",
+    "status": "Quoted",
+    "createdAt": "2026-09-29T14:20:00.000Z"
+  }
+]
