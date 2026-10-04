@@ -1,0 +1,13 @@
+[
+  {
+    "id": "PAY-2026-001",
+    "invoiceId": "GT-2026-001",
+    "customerName": "Ramesh Patil",
+    "customerPhone": "+91 9876543210",
+    "amountPaid": 32214,
+    "paymentDate": "2026-09-13",
+    "paymentMethod": "UPI / PhonePe",
+    "transactionRef": "UPI984210394812",
+    "notes": "Full payment received upon delivery."
+  }
+]
