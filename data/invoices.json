@@ -1,0 +1,66 @@
+[
+  {
+    "id": "GT-2026-003",
+    "date": "2026-09-29",
+    "customerName": "Ramesh Patil",
+    "customerPhone": "+91 9876543210",
+    "city": "Opposite Gram Panchayat, Naigaon Bz 431709",
+    "items": [
+      {
+        "productId": "PRD-001",
+        "description": "TATA Shaktee Color Coated Sheet (Royal Blue, 0.45 mm)",
+        "quantity": 10,
+        "lengthFt": 12,
+        "widthFt": 3.5,
+        "totalSqFt": 420,
+        "rate": 65,
+        "amount": 27300
+      }
+    ],
+    "subtotal": 27300,
+    "totalGst": 4914,
+    "cgst": 2457,
+    "sgst": 2457,
+    "grandTotal": 32214,
+    "status": "Pending"
+  },
+  {
+    "id": "GT-2026-002",
+    "date": "2026-09-29",
+    "customerName": "Suresh Shinde",
+    "customerPhone": "+91 9922334455",
+    "subtotal": 30000,
+    "totalGst": 5400,
+    "grandTotal": 35400,
+    "status": "Pending"
+  },
+  {
+    "id": "GT-2026-001",
+    "customerName": "Ramesh Patil",
+    "customerPhone": "9876543210",
+    "city": "Naigaon Bz",
+    "date": "2026-09-13",
+    "items": [
+      {
+        "brand": "TATA Shaktee",
+        "type": "Trapezoidal Profile",
+        "color": "Royal Blue",
+        "thickness": "0.45 mm",
+        "lengthFt": 12,
+        "widthFt": 3.5,
+        "quantity": 10,
+        "sqft": 420,
+        "rate": 65,
+        "amount": 27300
+      }
+    ],
+    "subtotal": 27300,
+    "gstType": "CGST_SGST",
+    "cgst": 2457,
+    "sgst": 2457,
+    "totalGst": 4914,
+    "grandTotal": 32214,
+    "status": "Paid",
+    "notes": "Sample invoice - Authorized TATA Roofing Sheet order."
+  }
+]
