@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ORD-2026-002",
+    "orderDate": "2026-09-29",
+    "quotationId": "QTN-2026-002",
+    "customerName": "Suresh Shinde",
+    "customerPhone": "+91 9922334455",
+    "subtotal": 30000,
+    "totalGst": 5400,
+    "grandTotal": 35400,
+    "orderStatus": "Processing",
+    "paymentStatus": "Pending"
+  },
+  {
+    "id": "ORD-2026-001",
+    "quotationId": "QTN-2026-000",
+    "customerId": "CUST-001",
+    "customerName": "Ramesh Patil",
+    "customerPhone": "+91 9876543210",
+    "deliveryAddress": "Opposite Gram Panchayat, Naigaon Bz 431709",
+    "orderDate": "2026-09-13",
+    "items": [
+      {
+        "productId": "PRD-001",
+        "description": "TATA Shaktee Color Coated Sheet (Royal Blue, 0.45 mm)",
+        "quantity": 10,
+        "lengthFt": 12,
+        "widthFt": 3.5,
+        "totalSqFt": 420,
+        "rate": 65,
+        "amount": 27300
+      }
+    ],
+    "subtotal": 27300,
+    "gstRate": 18,
+    "cgst": 2457,
+    "sgst": 2457,
+    "totalGst": 4914,
+    "grandTotal": 32214,
+    "orderStatus": "Delivered",
+    "paymentStatus": "Paid",
+    "invoiceId": "GT-2026-001"
+  }
+]
