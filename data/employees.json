@@ -1,0 +1,32 @@
+[
+  {
+    "id": "EMP-001",
+    "name": "Maroti Shinde",
+    "role": "Machine Roll Forming Operator",
+    "phone": "+91 9822114455",
+    "salaryType": "Daily Wage",
+    "rate": 650,
+    "joinDate": "2025-04-10",
+    "status": "Active"
+  },
+  {
+    "id": "EMP-002",
+    "name": "Datta Pawar",
+    "role": "Factory Helper & Loader",
+    "phone": "+91 9403882211",
+    "salaryType": "Daily Wage",
+    "rate": 450,
+    "joinDate": "2025-06-15",
+    "status": "Active"
+  },
+  {
+    "id": "EMP-003",
+    "name": "Santosh Gaikwad",
+    "role": "Delivery Truck Driver",
+    "phone": "+91 9763221100",
+    "salaryType": "Monthly Salary",
+    "rate": 15000,
+    "joinDate": "2025-01-05",
+    "status": "Active"
+  }
+]
