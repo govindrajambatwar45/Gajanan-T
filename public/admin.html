@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal & Mini ERP | Gajanan Traders Naigaon</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+  <!-- Admin Authentication Modal (If not logged in) -->
+  <div id="loginModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl border border-slate-200">
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 brand-gradient rounded-2xl mx-auto flex items-center justify-center text-white text-2xl font-black mb-3 shadow">
+          GT
+        </div>
+        <h2 class="text-2xl font-black text-slate-900">Gajanan Traders ERP</h2>
+        <p class="text-xs text-slate-500 mt-1">Admin Portal & Billing Management System</p>
+      </div>
+
+      <form id="adminLoginForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
+          <input type="text" id="loginUsername" value="admin" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold" required>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+          <input type="password" id="loginPassword" value="adminpassword123" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold" required>
+        </div>
+
+        <div id="loginError" class="hidden text-xs text-red-600 bg-red-50 p-2.5 rounded-lg border border-red-200 text-center font-semibold"></div>
+
+        <button type="submit" class="w-full bg-slate-900 hover:bg-blue-900 text-white font-black py-3 rounded-xl text-sm shadow-md transition">
+          <i class="fa-solid fa-key mr-1"></i> Sign In to Admin Portal
+        </button>
+      </form>
+      
+      <div class="mt-6 text-center text-[11px] text-slate-400">
+        Default Login: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">admin</code> / <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">adminpassword123</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main ERP Layout (Visible when authenticated) -->
+  <div id="erpApp" class="hidden min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 brand-gradient rounded-xl flex items-center justify-center font-black text-xl text-white">
+            GT
+          </div>
+          <div>
+            <span class="font-extrabold text-lg block leading-tight">Gajanan Traders - Mini ERP</span>
+            <span class="text-[11px] text-amber-400 font-medium">Naigaon Bz Shop Manager</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Language Toggle -->
+          <div class="inline-flex rounded-lg bg-slate-800 p-0.5 border border-slate-700 text-xs">
+            <button id="adminLangEn" class="px-2.5 py-1 rounded-md font-bold text-amber-400 bg-slate-900 transition">English</button>
+            <button id="adminLangMr" class="px-2.5 py-1 rounded-md font-bold text-slate-300 hover:text-white transition">मराठी</button>
+          </div>
+          <a href="/" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg font-semibold border border-slate-700 transition">
+            <i class="fa-solid fa-globe mr-1"></i> <span data-i18n="public_site">Public Website</span>
+          </a>
+          <button id="logoutBtn" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-bold transition">
+            <i class="fa-solid fa-right-from-bracket mr-1"></i> <span data-i18n="logout">Logout</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Module Navigation Bar -->
+      <div class="bg-slate-800 border-t border-slate-700 overflow-x-auto">
+        <div class="max-w-7xl mx-auto px-4 flex space-x-1 py-1 text-xs font-bold whitespace-nowrap">
+          <button class="nav-tab active-tab text-amber-400 border-b-2 border-amber-400 px-3 py-2 flex items-center gap-1.5" data-tab="dashboard">
+            <i class="fa-solid fa-chart-line"></i> <span data-i18n="tab_dashboard">Dashboard</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="enquiries">
+            <i class="fa-solid fa-inbox"></i> <span data-i18n="tab_enquiries">Enquiries</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="quotations">
+            <i class="fa-solid fa-file-signature"></i> <span data-i18n="tab_quotations">Quotations</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="orders">
+            <i class="fa-solid fa-truck-ramp-box"></i> <span data-i18n="tab_orders">Sales Orders</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="invoices">
+            <i class="fa-solid fa-file-invoice-dollar"></i> <span data-i18n="tab_invoices">Invoices / Bills</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="payments">
+            <i class="fa-solid fa-money-bill-transfer"></i> <span data-i18n="tab_payments">Payments</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="customers">
+            <i class="fa-solid fa-users"></i> <span data-i18n="tab_customers">Customers</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="products">
+            <i class="fa-solid fa-boxes-stacked"></i> <span data-i18n="tab_products">Product Rates</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="employees">
+            <i class="fa-solid fa-user-group"></i> <span data-i18n="tab_employees">Workers / Employees</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="expenses">
+            <i class="fa-solid fa-receipt"></i> <span data-i18n="tab_expenses">Expenses</span>
+          </button>
+          <button class="nav-tab text-slate-300 hover:text-white px-3 py-2 flex items-center gap-1.5" data-tab="reports">
+            <i class="fa-solid fa-chart-pie"></i> <span data-i18n="tab_reports">Reports</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+
+      <!-- 1. DASHBOARD OVERVIEW -->
+      <section id="tab-dashboard" class="tab-content space-y-6">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-2xl font-black text-slate-900">Shop Overview & Metrics</h1>
+            <p class="text-xs text-slate-500">Live operational data for Gajanan Traders, Naigaon Bz.</p>
+          </div>
+          <button onclick="openNewInvoiceModal()" class="bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow transition">
+            <i class="fa-solid fa-plus"></i> Create New Invoice
+          </button>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+            <span class="text-xs text-slate-500 font-bold uppercase">Total Invoiced</span>
+            <div id="dashTotalInvoiced" class="text-2xl font-black text-slate-900">₹0</div>
+            <span class="text-[11px] text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-trend-up"></i> Sales revenue</span>
+          </div>
+          
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+            <span class="text-xs text-slate-500 font-bold uppercase">Payments Received</span>
+            <div id="dashTotalPaid" class="text-2xl font-black text-emerald-600">₹0</div>
+            <span class="text-[11px] text-slate-500">Collected cash/UPI</span>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+            <span class="text-xs text-slate-500 font-bold uppercase">Outstanding Balance</span>
+            <div id="dashOutstanding" class="text-2xl font-black text-amber-600">₹0</div>
+            <span class="text-[11px] text-amber-700 font-medium">Customer dues</span>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+            <span class="text-xs text-slate-500 font-bold uppercase">Net Operating Profit</span>
+            <div id="dashNetProfit" class="text-2xl font-black text-blue-900">₹0</div>
+            <span class="text-[11px] text-slate-500">Sales minus shop expenses</span>
+          </div>
+        </div>
+
+        <!-- Recent Invoices & Quick Actions -->
+        <div class="grid lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-extrabold text-slate-900">Recent Invoices</h3>
+              <button onclick="switchTab('invoices')" class="text-xs text-blue-700 font-bold hover:underline">View All</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-600 font-bold border-b">
+                  <tr>
+                    <th class="p-2.5">Invoice #</th>
+                    <th class="p-2.5">Customer</th>
+                    <th class="p-2.5">Date</th>
+                    <th class="p-2.5">Amount</th>
+                    <th class="p-2.5">Status</th>
+                    <th class="p-2.5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRecentInvoicesTable" class="divide-y text-slate-700">
+                  <!-- JS Filled -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 bg-slate-900 text-white p-6 rounded-2xl shadow-sm space-y-4">
+            <h3 class="font-extrabold text-lg"><i class="fa-solid fa-bolt text-amber-400 mr-2"></i>Quick Actions</h3>
+            <div class="space-y-2.5">
+              <button onclick="openNewQuotationModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-left p-3 rounded-xl border border-slate-700 text-xs font-bold flex justify-between items-center transition">
+                <span><i class="fa-solid fa-file-signature text-amber-400 mr-2"></i> Create New Quotation</span>
+                <i class="fa-solid fa-chevron-right text-slate-400"></i>
+              </button>
+              <button onclick="openNewEnquiryModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-left p-3 rounded-xl border border-slate-700 text-xs font-bold flex justify-between items-center transition">
+                <span><i class="fa-solid fa-inbox text-amber-400 mr-2"></i> Add Customer Enquiry</span>
+                <i class="fa-solid fa-chevron-right text-slate-400"></i>
+              </button>
+              <button onclick="openNewExpenseModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-left p-3 rounded-xl border border-slate-700 text-xs font-bold flex justify-between items-center transition">
+                <span><i class="fa-solid fa-receipt text-amber-400 mr-2"></i> Record Shop Expense</span>
+                <i class="fa-solid fa-chevron-right text-slate-400"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. ENQUIRIES TAB -->
+      <section id="tab-enquiries" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900">Customer Requirement Enquiries</h1>
+            <p class="text-xs text-slate-500">Inquiries submitted via website or phone calls.</p>
+          </div>
+          <button onclick="openNewEnquiryModal()" class="bg-blue-800 text-white text-xs font-bold px-4 py-2 rounded-xl">
+            <i class="fa-solid fa-plus mr-1"></i> Add Enquiry
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3">ID</th>
+                <th class="p-3">Customer</th>
+                <th class="p-3">Phone / City</th>
+                <th class="p-3">Brand Preference</th>
+                <th class="p-3">Requirement Details</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="enquiriesTableBody" class="divide-y">
+              <!-- JS Loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. QUOTATIONS TAB -->
+      <section id="tab-quotations" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900">Formal Quotations & Price Estimates</h1>
+            <p class="text-xs text-slate-500">Generate sheet price estimations with 18% GST tax breakdown.</p>
+          </div>
+          <button onclick="openNewQuotationModal()" class="bg-blue-800 text-white text-xs font-bold px-4 py-2 rounded-xl">
+            <i class="fa-solid fa-plus mr-1"></i> New Quotation
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3">Quote #</th>
+                <th class="p-3">Customer</th>
+                <th class="p-3">Date</th>
+                <th class="p-3">Subtotal</th>
+                <th class="p-3">GST (18%)</th>
+                <th class="p-3">Grand Total</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="quotationsTableBody" class="divide-y">
+              <!-- JS Loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. SALES ORDERS TAB -->
+      <section id="tab-orders" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900">Confirmed Sales Orders</h1>
+            <p class="text-xs text-slate-500">Manage orders in roll-forming production or ready for dispatch.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3">Order #</th>
+                <th class="p-3">Customer</th>
+                <th class="p-3">Order Date</th>
+                <th class="p-3">Total Sq Ft / Amount</th>
+                <th class="p-3">Production Status</th>
+                <th class="p-3">Payment</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody" class="divide-y">
+              <!-- JS Loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. INVOICES & BILLING TAB -->
+      <section id="tab-invoices" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900">Tax Invoices & Cash Memos</h1>
+            <p class="text-xs text-slate-500">Official GST bills for roofing sheets, purlins, and accessories.</p>
+          </div>
+          <button onclick="openNewInvoiceModal()" class="bg-blue-800 text-white text-xs font-bold px-4 py-2 rounded-xl">
+            <i class="fa-solid fa-plus mr-1"></i> Create Tax Invoice
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3">Invoice #</th>
+                <th class="p-3">Customer Name</th>
+                <th class="p-3">Phone</th>
+                <th class="p-3">Date</th>
+                <th class="p-3">Taxable Amt</th>
+                <th class="p-3">GST</th>
+                <th class="p-3">Grand Total</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="invoicesTableBody" class="divide-y">
+              <!-- JS Loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6. PAYMENTS TAB -->
+      <section id="tab-payments" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900">Payments Received Log</h1>
+            <p class="text-xs text-slate-500">Track collections via Cash, UPI, and Bank Transfer.</p>
+          </div>
+          <button onclick="openNewPaymentModal()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl">
+            <i class="fa-solid fa-plus mr-1"></i> Record Payment
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3">Receipt #</th>
+                <th class="p-3">Invoice Ref</th>
+                <th class="p-3">Customer</th>
+                <th class="p-3">Amount Paid</th>
+                <th class="p-3">Date</th>
+                <th class="p-3">Method</th>
+                <th class="p-3">Ref Code</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsTableBody" class="divide-y">
+              <!-- JS Loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. CUSTOMERS TAB -->
+      <section id="tab-customers" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900">Customer Directory</h1>
+            <p class="text-xs text-slate-500">List of home builders, contractors, and commercial buyers.</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3">Customer ID</th>
+                <th class="p-3">Name</th>
+                <th class="p-3">Phone</th>
+                <th class="p-3">Location / City</th>
+                <th class="p-3">Type</th>
+                <th class="p-3">Total Orders</th>
+                <th class="p-3">Total Business</th>
+              </tr>
+            </thead>
+            <tbody id="customersTableBody" class="divide-y">
+              <!-- JS Loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 8. PRODUCTS TAB -->
+      <section id="tab-products" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900">Product Rates & Inventory</h1>
+            <p class="text-xs text-slate-500">Configure baseline rate per sq ft or per kg for TATA, JSW, Jindal, and custom sheets.</p>
+          </div>
+          <button onclick="openNewProductModal()" class="bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow">
+            <i class="fa-solid fa-plus"></i> Add New Product
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3">ID</th>
+                <th class="p-3">Brand</th>
+                <th class="p-3">Product Name</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Baseline Rate</th>
+                <th class="p-3">Unit</th>
+                <th class="p-3">Stock Status</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody" class="divide-y">
+              <!-- JS Loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 9. EXPENSES TAB -->
+      <section id="tab-expenses" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900">Shop Operating Expenses</h1>
+            <p class="text-xs text-slate-500">Track raw coil procurement, transport, and labor wages.</p>
+          </div>
+          <button onclick="openNewExpenseModal()" class="bg-blue-800 text-white text-xs font-bold px-4 py-2 rounded-xl">
+            <i class="fa-solid fa-plus mr-1"></i> Record Expense
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3">EXP ID</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Description</th>
+                <th class="p-3">Amount</th>
+                <th class="p-3">Date</th>
+                <th class="p-3">Paid To</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="expensesTableBody" class="divide-y">
+              <!-- JS Loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- EMPLOYEES & WORKERS TAB -->
+      <section id="tab-employees" class="tab-content hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-xl font-black text-slate-900" data-i18n="emp_title">Workers & Factory Staff Management</h1>
+            <p class="text-xs text-slate-500" data-i18n="emp_desc">Manage roll forming operators, loaders, drivers, wages and salaries.</p>
+          </div>
+          <button onclick="openNewEmployeeModal()" class="bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow transition">
+            <i class="fa-solid fa-user-plus"></i> <span data-i18n="emp_add_btn">+ Add New Worker</span>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b font-bold text-slate-700">
+              <tr>
+                <th class="p-3" data-i18n="col_emp_id">EMP ID</th>
+                <th class="p-3" data-i18n="col_emp_name">Name</th>
+                <th class="p-3" data-i18n="col_emp_role">Role / Job</th>
+                <th class="p-3" data-i18n="col_emp_phone">Mobile Number</th>
+                <th class="p-3" data-i18n="col_emp_salary_type">Salary Type</th>
+                <th class="p-3" data-i18n="col_emp_rate">Wage / Rate (₹)</th>
+                <th class="p-3" data-i18n="col_emp_join_date">Join Date</th>
+                <th class="p-3" data-i18n="col_emp_status">Status</th>
+                <th class="p-3 text-right" data-i18n="col_action">Action</th>
+              </tr>
+            </thead>
+            <tbody id="employeesTableBody" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 10. REPORTS TAB -->
+      <section id="tab-reports" class="tab-content hidden space-y-6">
+        <div>
+          <h1 class="text-2xl font-black text-slate-900">Financial Reports & Business Analytics</h1>
+          <p class="text-xs text-slate-500">Comprehensive P&L and GST summary for Gajanan Traders.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="font-extrabold text-slate-900 text-base border-b pb-2">Sales Summary</h3>
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Total Invoices Raised:</span> <span id="repTotalInvoices" class="font-bold">0</span></div>
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Total Gross Revenue:</span> <span id="repGrossRev" class="font-bold text-emerald-600">₹0</span></div>
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Total Tax Collected (18% GST):</span> <span id="repTotalGst" class="font-bold text-blue-800">₹0</span></div>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="font-extrabold text-slate-900 text-base border-b pb-2">Collections & Dues</h3>
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Total Cash/UPI Received:</span> <span id="repTotalPaid" class="font-bold text-emerald-600">₹0</span></div>
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Pending Customer Dues:</span> <span id="repOutstanding" class="font-bold text-amber-600">₹0</span></div>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+            <h3 class="font-extrabold text-slate-900 text-base border-b pb-2">Net Profit & Loss</h3>
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Gross Invoiced Revenue:</span> <span id="repGrossRev2" class="font-bold">₹0</span></div>
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Total Business Expenses:</span> <span id="repExpenses" class="font-bold text-red-600">₹0</span></div>
+            <div class="flex justify-between text-xs border-t pt-2"><span class="font-black text-slate-900">Net Estimated Profit:</span> <span id="repNetProfit" class="font-black text-blue-900 text-sm">₹0</span></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- PRODUCT CREATE / EDIT MODAL -->
+  <div id="productModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl space-y-6 my-8">
+      <div class="flex justify-between items-center border-b pb-4">
+        <h2 id="productModalTitle" class="text-xl font-black text-slate-900"><i class="fa-solid fa-boxes-stacked text-blue-800 mr-2"></i> Add New Product</h2>
+        <button onclick="closeModal('productModal')" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="productForm" class="space-y-4">
+        <input type="hidden" id="prdEditId" value="">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Product Name *</label>
+          <input type="text" id="prdName" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold" placeholder="e.g. TATA Shaktee Color Coated Sheet" required>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Brand *</label>
+            <select id="prdBrand" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-bold">
+              <option value="TATA">TATA Steel</option>
+              <option value="JSW">JSW Steel</option>
+              <option value="Jindal Steel">Jindal Steel</option>
+              <option value="Custom Manufactured">Custom Manufactured</option>
+              <option value="Gajanan Steel">Gajanan Steel</option>
+              <option value="Standard">Standard Commercial</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Category *</label>
+            <select id="prdCategory" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-bold">
+              <option value="Color Coated Sheet">Color Coated Sheet</option>
+              <option value="Galvalume Sheet">Galvalume Sheet</option>
+              <option value="Custom Fabrication">Custom Fabrication</option>
+              <option value="Tile Profile">Tile Profile</option>
+              <option value="Curve Sheet">Curve Sheet</option>
+              <option value="Structural Section">Structural Section (C/Z Purlin)</option>
+              <option value="Daylight Sheet">Daylight / Polycarbonate Sheet</option>
+              <option value="Fastener">Fastener / Screw</option>
+              <option value="Accessories">Roof Accessories</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Baseline Rate (₹) *</label>
+            <input type="number" id="prdRate" step="0.01" value="60" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-bold" required>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Pricing Unit *</label>
+            <select id="prdUnit" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-bold">
+              <option value="sq ft">sq ft</option>
+              <option value="kg">kg</option>
+              <option value="piece">piece</option>
+              <option value="box">box</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Stock Status *</label>
+            <select id="prdStockStatus" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-bold">
+              <option value="In Stock">In Stock</option>
+              <option value="Made to Order">Made to Order</option>
+              <option value="Out of Stock">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Thickness Options (Comma separated)</label>
+          <input type="text" id="prdThicknessOptions" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold" placeholder="e.g. 0.35 mm, 0.40 mm, 0.45 mm, 0.50 mm">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Available Colors (Comma separated)</label>
+          <input type="text" id="prdColors" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold" placeholder="e.g. Royal Blue, Tile Red, Off-White, Mint Green">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Description</label>
+          <textarea id="prdDescription" rows="2" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold" placeholder="Product features, coating specs, or details..."></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3">
+          <button type="button" onclick="closeModal('productModal')" class="px-4 py-2 text-xs font-bold text-slate-600">Cancel</button>
+          <button type="submit" class="bg-blue-800 hover:bg-blue-900 text-white px-6 py-2.5 rounded-xl text-xs font-bold shadow-md">
+            Save Product & Rate
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- INVOICE CREATION MODAL -->
+  <div id="invoiceModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl space-y-6 my-8">
+      <div class="flex justify-between items-center border-b pb-4">
+        <h2 class="text-xl font-black text-slate-900"><i class="fa-solid fa-file-invoice text-blue-800 mr-2"></i> Create Tax Invoice / Cash Memo</h2>
+        <button onclick="closeModal('invoiceModal')" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="invoiceForm" class="space-y-4">
+        <div class="grid sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Customer Name *</label>
+            <input type="text" id="invCustomerName" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold" placeholder="e.g. Ramesh Patil" required>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number *</label>
+            <input type="tel" id="invCustomerPhone" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold" placeholder="9876543210" required>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">City / Location</label>
+            <input type="text" id="invCity" value="Naigaon Bz" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold">
+          </div>
+        </div>
+
+        <!-- Line Item Builder -->
+        <div class="border rounded-2xl p-4 bg-slate-50 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-black text-slate-700 uppercase">Item Specification</span>
+            <span class="text-[11px] text-slate-500">Trapezoidal 3.5 ft coverage</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Brand</label>
+              <select id="invBrand" class="w-full bg-white border p-2 rounded-lg text-xs font-bold">
+                <option value="TATA Shaktee">TATA Shaktee</option>
+                <option value="JSW Pragati">JSW Pragati / Coloron+</option>
+                <option value="Jindal Steel">Jindal Steel Galvalume</option>
+                <option value="Custom Manufactured">Custom Manufactured Color Sheet</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Color Shade</label>
+              <select id="invColor" class="w-full bg-white border p-2 rounded-lg text-xs font-bold">
+                <option value="Royal Blue">Royal Blue</option>
+                <option value="Tile Red">Tile Red</option>
+                <option value="Off-White">Off-White</option>
+                <option value="Mint Green">Mint Green</option>
+                <option value="Bare Galvalume">Bare Galvalume Silver</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Thickness</label>
+              <select id="invThickness" class="w-full bg-white border p-2 rounded-lg text-xs font-bold">
+                <option value="0.35 mm">0.35 mm</option>
+                <option value="0.40 mm">0.40 mm</option>
+                <option value="0.45 mm" selected>0.45 mm</option>
+                <option value="0.50 mm">0.50 mm</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Rate per Sq Ft (₹)</label>
+              <input type="number" id="invRate" value="62" class="w-full bg-white border p-2 rounded-lg text-xs font-bold">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Length (Feet)</label>
+              <input type="number" id="invLength" value="12" min="1" class="w-full bg-white border p-2 rounded-lg text-xs font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Quantity (Sheets)</label>
+              <input type="number" id="invQty" value="10" min="1" class="w-full bg-white border p-2 rounded-lg text-xs font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Calculated Sq Ft</label>
+              <input type="text" id="invSqFt" value="420.0" class="w-full bg-slate-100 border p-2 rounded-lg text-xs font-bold text-slate-700" readonly>
+            </div>
+          </div>
+        </div>
+
+        <!-- Totals & Taxes -->
+        <div class="bg-slate-900 text-white p-4 rounded-2xl space-y-2 text-xs">
+          <div class="flex justify-between"><span class="text-slate-400">Subtotal Taxable Amount:</span> <span id="invCalcSubtotal" class="font-bold text-white">₹26,040</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">CGST (9%) + SGST (9%) = 18%:</span> <span id="invCalcGst" class="font-bold text-white">₹4,687</span></div>
+          <div class="flex justify-between text-sm border-t border-slate-800 pt-2"><span class="font-black text-amber-400">Grand Total Amount:</span> <span id="invCalcGrandTotal" class="font-black text-amber-400">₹30,727</span></div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3">
+          <button type="button" onclick="closeModal('invoiceModal')" class="px-4 py-2 text-xs font-bold text-slate-600">Cancel</button>
+          <button type="submit" class="bg-blue-800 hover:bg-blue-900 text-white px-6 py-2.5 rounded-xl text-xs font-bold shadow-md">
+            Save & Generate Invoice
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EMPLOYEE MODAL -->
+  <div id="employeeModal" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 id="employeeModalTitle" class="font-black text-slate-900 text-base" data-i18n="modal_emp_title">Add Worker / Employee</h3>
+        <button onclick="closeModal('employeeModal')" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
+      </div>
+
+      <form id="employeeForm" class="space-y-4">
+        <input type="hidden" id="empId">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_emp_name">Full Name *</label>
+          <input type="text" id="empName" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-bold" placeholder="e.g. Maroti Shinde" required>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_emp_role">Role / Job Title *</label>
+            <select id="empRole" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold" required>
+              <option value="Machine Roll Forming Operator">Machine Roll Forming Operator</option>
+              <option value="Factory Helper & Loader">Factory Helper & Loader</option>
+              <option value="Delivery Truck Driver">Delivery Truck Driver</option>
+              <option value="Fabrication Technician">Fabrication Technician</option>
+              <option value="Sheet Cutter & Bending">Sheet Cutter & Bending</option>
+              <option value="Shop Assistant / Billing">Shop Assistant / Billing</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_emp_phone">Mobile Number *</label>
+            <input type="tel" id="empPhone" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-bold" placeholder="+91 9822000000" required>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_emp_salary_type">Salary / Wage Type *</label>
+            <select id="empSalaryType" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold">
+              <option value="Daily Wage">Daily Wage (रोजंदारी)</option>
+              <option value="Monthly Salary">Monthly Salary (मासिक पगार)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_emp_rate">Rate / Amount (₹) *</label>
+            <input type="number" id="empRate" step="1" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-bold" placeholder="e.g. 600 or 15000" required>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_emp_join_date">Join Date</label>
+            <input type="date" id="empJoinDate" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lbl_emp_status">Employment Status</label>
+            <select id="empStatus" class="w-full bg-slate-50 border p-2.5 rounded-lg text-xs font-semibold">
+              <option value="Active">Active (कार्यरत)</option>
+              <option value="On Leave">On Leave (रजेवर)</option>
+              <option value="Inactive">Inactive (कार्यमुक्त)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3 border-t">
+          <button type="button" onclick="closeModal('employeeModal')" class="px-4 py-2 text-xs font-bold text-slate-600" data-i18n="btn_cancel">Cancel</button>
+          <button type="submit" class="bg-blue-800 hover:bg-blue-900 text-white px-6 py-2.5 rounded-xl text-xs font-bold shadow-md" data-i18n="btn_save_emp">
+            Save Worker Details
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PRINT INVOICE MODAL -->
+  <div id="printModal" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-3xl w-full p-6 space-y-6">
+      <div class="flex justify-between items-center no-print">
+        <h3 class="font-black text-slate-900 text-lg">Official Tax Invoice Preview</h3>
+        <div class="flex gap-2">
+          <button onclick="window.print()" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-print"></i> Print / Download PDF
+          </button>
+          <button id="printModalWhatsAppBtn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-brands fa-whatsapp"></i> Send to WhatsApp
+          </button>
+          <button onclick="closeModal('printModal')" class="text-slate-400 hover:text-slate-600 px-2 text-xl font-bold">&times;</button>
+        </div>
+      </div>
+
+      <!-- Printable Invoice Area -->
+      <div id="printable-invoice" class="border border-slate-300 p-8 rounded-xl bg-white text-slate-900 space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-start border-b border-slate-300 pb-4">
+          <div>
+            <h1 class="text-2xl font-black text-slate-900">GAJANAN TRADERS</h1>
+            <p class="text-xs text-slate-600 font-semibold">Authorised Dealer: TATA Shaktee | JSW Pragati | Jindal Steel</p>
+            <p class="text-[11px] text-slate-500">Roofing Sheet Manufacturing & Custom Color Fabrication</p>
+            <p class="text-[11px] text-slate-600 mt-1">
+              <strong>Address:</strong> Near Uddhav Nagri, Nanded Road, Naigaon Bz, Tq Naigaon Kh, Dist Nanded 431709<br>
+              <strong>Phone/WhatsApp:</strong> +91 9767228008 | <strong>GSTIN:</strong> 27ABCDE1234F1Z5
+            </p>
+          </div>
+          <div class="text-right">
+            <span class="inline-block bg-slate-900 text-white text-xs font-black px-3 py-1 rounded uppercase tracking-wider mb-2">TAX INVOICE</span>
+            <div class="text-xs font-bold text-slate-800" id="printInvNumber">Invoice #: GT-2026-001</div>
+            <div class="text-xs text-slate-600" id="printInvDate">Date: 2026-09-13</div>
+          </div>
+        </div>
+
+        <!-- Customer Billing Info -->
+        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 grid grid-cols-2 gap-4 text-xs">
+          <div>
+            <span class="text-slate-500 text-[10px] uppercase font-bold block">Billed To:</span>
+            <strong id="printCustName" class="text-sm text-slate-900 block">Ramesh Patil</strong>
+            <span id="printCustPhone" class="block text-slate-700">Phone: +91 9876543210</span>
+            <span id="printCustCity" class="block text-slate-700">Location: Naigaon Bz 431709</span>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-500 text-[10px] uppercase font-bold block">Payment Details:</span>
+            <span id="printPayStatus" class="font-bold text-emerald-700">PAID IN FULL</span><br>
+            <span class="text-slate-600">Place of Supply: Maharashtra (27)</span>
+          </div>
+        </div>
+
+        <!-- Itemized Table -->
+        <table class="w-full text-left text-xs border border-slate-300">
+          <thead class="bg-slate-100 font-bold border-b border-slate-300 text-slate-800">
+            <tr>
+              <th class="p-2 border-r">#</th>
+              <th class="p-2 border-r">Item & Description</th>
+              <th class="p-2 border-r">HSN Code</th>
+              <th class="p-2 border-r">Qty / Sq Ft</th>
+              <th class="p-2 border-r">Rate (₹)</th>
+              <th class="p-2 text-right">Amount (₹)</th>
+            </tr>
+          </thead>
+          <tbody id="printInvoiceItemsBody" class="divide-y divide-slate-200">
+            <!-- JS Populated -->
+          </tbody>
+        </table>
+
+        <!-- Totals & Taxes -->
+        <div class="flex justify-between items-start border-t border-slate-300 pt-4 text-xs">
+          <div class="space-y-1 text-[11px] text-slate-600 max-w-xs">
+            <strong>Bank Account Details for NEFT/UPI:</strong><br>
+            Bank Name: State Bank of India, Naigaon Bz<br>
+            A/c Name: GAJANAN TRADERS<br>
+            A/c No: 38291048291 | IFSC: SBIN0004092<br>
+            UPI ID: 9767228008@ybl
+          </div>
+
+          <div class="w-64 space-y-1.5 text-right">
+            <div class="flex justify-between"><span class="text-slate-600">Taxable Subtotal:</span> <span id="printSubtotal" class="font-bold">₹0</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">CGST (9%):</span> <span id="printCgst" class="font-bold">₹0</span></div>
+            <div class="flex justify-between"><span class="text-slate-600">SGST (9%):</span> <span id="printSgst" class="font-bold">₹0</span></div>
+            <div class="flex justify-between text-sm font-black border-t border-slate-400 pt-2 text-slate-900">
+              <span>Grand Total:</span> <span id="printGrandTotal">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Terms & Signature -->
+        <div class="flex justify-between items-end pt-8 border-t border-slate-200 text-[10px] text-slate-500">
+          <div>
+            <strong>Terms & Conditions:</strong><br>
+            1. Goods once sold will not be taken back.<br>
+            2. Subject to Naigaon Bz jurisdiction.
+          </div>
+          <div class="text-center">
+            <div class="h-10"></div>
+            <div class="border-t border-slate-400 pt-1 font-bold text-slate-800">For GAJANAN TRADERS</div>
+            <span class="text-[9px]">Authorized Signatory</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
