@@ -1,0 +1,40 @@
+[
+  {
+    "id": "EXP-2026-004",
+    "expenseDate": "2026-09-30",
+    "category": "wages",
+    "amount": 50000,
+    "description": "jsw",
+    "paidTo": "Vendor"
+  },
+  {
+    "id": "EXP-2026-001",
+    "category": "Coil Raw Material Purchase",
+    "description": "JSW Steel Coil Dispatch Batch #409",
+    "amount": 185000,
+    "expenseDate": "2026-09-10",
+    "paidTo": "JSW Steel Authorized Distributor Nanded",
+    "paymentMethod": "Bank Transfer (NEFT)",
+    "receiptRef": "NEFT-JSW-49201"
+  },
+  {
+    "id": "EXP-2026-002",
+    "category": "Freight & Logistics",
+    "description": "Truck Freight for raw coil transport Nanded to Naigaon shop",
+    "amount": 4500,
+    "expenseDate": "2026-09-11",
+    "paidTo": "Naigaon Road Logistics",
+    "paymentMethod": "Cash",
+    "receiptRef": "CASH-LOG-019"
+  },
+  {
+    "id": "EXP-2026-003",
+    "category": "Labor & Roll Forming",
+    "description": "Weekly machine operator & helper wages",
+    "amount": 12000,
+    "expenseDate": "2026-09-14",
+    "paidTo": "Shop Fabrication Team",
+    "paymentMethod": "Cash",
+    "receiptRef": "WAGE-SEP-W2"
+  }
+]
