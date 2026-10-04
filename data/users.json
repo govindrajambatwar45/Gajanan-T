@@ -1,0 +1,10 @@
+[
+  {
+    "id": "USR-001",
+    "username": "admin",
+    "password": "adminpassword123",
+    "name": "Owner / Manager",
+    "role": "Super Admin",
+    "phone": "+91 9767228008"
+  }
+]
