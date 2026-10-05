@@ -463,12 +463,16 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(` Gajanan Traders Web App & Mini ERP Server Running`);
-  console.log(` URL: http://localhost:${PORT}`);
-  console.log(` Admin ERP: http://localhost:${PORT}/admin.html`);
-  console.log(` Location: Naigaon Bz, Nanded 431709`);
-  console.log(` Phone: +91 9767228008`);
-  console.log(`====================================================`);
-});
+if (require.main === module || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(` Gajanan Traders Web App & Mini ERP Server Running`);
+    console.log(` URL: http://localhost:${PORT}`);
+    console.log(` Admin ERP: http://localhost:${PORT}/admin.html`);
+    console.log(` Location: Naigaon Bz, Nanded 431709`);
+    console.log(` Phone: +91 9767228008`);
+    console.log(`====================================================`);
+  });
+}
+
+module.exports = app;
