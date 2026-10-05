@@ -75,6 +75,95 @@ function setupLoginForm() {
       checkAuth();
     });
   }
+
+  // Password visibility toggle
+  const togglePassBtn = document.getElementById('toggleLoginPasswordBtn');
+  const loginPassInput = document.getElementById('loginPassword');
+  const toggleIcon = document.getElementById('toggleLoginPasswordIcon');
+  if (togglePassBtn && loginPassInput && toggleIcon) {
+    togglePassBtn.addEventListener('click', () => {
+      if (loginPassInput.type === 'password') {
+        loginPassInput.type = 'text';
+        toggleIcon.className = 'fa-solid fa-eye-slash';
+      } else {
+        loginPassInput.type = 'password';
+        toggleIcon.className = 'fa-solid fa-eye';
+      }
+    });
+  }
+
+  // Forgot Password modal controls
+  const forgotBtn = document.getElementById('forgotPasswordBtn');
+  const forgotModal = document.getElementById('forgotPasswordModal');
+  const loginModal = document.getElementById('loginModal');
+  const closeForgotBtn = document.getElementById('closeForgotModalBtn');
+  const forgotForm = document.getElementById('forgotPasswordForm');
+  const resetStatus = document.getElementById('resetStatus');
+
+  if (forgotBtn && forgotModal) {
+    forgotBtn.addEventListener('click', () => {
+      if (loginModal) loginModal.classList.add('hidden');
+      forgotModal.classList.remove('hidden');
+      if (resetStatus) resetStatus.classList.add('hidden');
+      forgotForm.reset();
+    });
+  }
+
+  if (closeForgotBtn && forgotModal) {
+    closeForgotBtn.addEventListener('click', () => {
+      forgotModal.classList.add('hidden');
+      if (loginModal) loginModal.classList.remove('hidden');
+    });
+  }
+
+  if (forgotForm) {
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      resetStatus.className = 'hidden text-xs p-2.5 rounded-lg border text-center font-semibold';
+
+      const username = document.getElementById('resetUsername').value.trim();
+      const phone = document.getElementById('resetPhone').value.trim();
+      const newPassword = document.getElementById('resetNewPassword').value.trim();
+      const confirmPassword = document.getElementById('resetConfirmPassword').value.trim();
+
+      if (newPassword !== confirmPassword) {
+        resetStatus.textContent = 'New password and confirm password do not match.';
+        resetStatus.className = 'text-xs p-2.5 rounded-lg border text-center font-semibold bg-red-50 text-red-600 border-red-200 block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, phone, newPassword })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          resetStatus.textContent = data.message || 'Password updated successfully!';
+          resetStatus.className = 'text-xs p-2.5 rounded-lg border text-center font-semibold bg-emerald-50 text-emerald-700 border-emerald-200 block';
+
+          setTimeout(() => {
+            forgotModal.classList.add('hidden');
+            if (loginModal) {
+              loginModal.classList.remove('hidden');
+              document.getElementById('loginUsername').value = username;
+              document.getElementById('loginPassword').value = '';
+              document.getElementById('loginPassword').focus();
+            }
+          }, 1500);
+        } else {
+          resetStatus.textContent = data.message || 'Failed to reset password. Please check your details.';
+          resetStatus.className = 'text-xs p-2.5 rounded-lg border text-center font-semibold bg-red-50 text-red-600 border-red-200 block';
+        }
+      } catch (err) {
+        console.error(err);
+        resetStatus.textContent = 'Server connection error. Please try again.';
+        resetStatus.className = 'text-xs p-2.5 rounded-lg border text-center font-semibold bg-red-50 text-red-600 border-red-200 block';
+      }
+    });
+  }
 }
 
 // Navigation Tabs
