@@ -1,10 +1,10 @@
 [
   {
     "id": "USR-001",
-    "username": "admin",
-    "password": "adminpassword123",
-    "name": "Owner / Manager",
-    "role": "Super Admin",
+    "username": "pankajm",
+    "password": "976722",
+    "name": "Mr. Pankaj Medewar",
+    "role": "Proprietor / Super Admin",
     "phone": "+91 9767228008"
   }
 ]
