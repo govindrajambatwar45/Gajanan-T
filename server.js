@@ -57,6 +57,34 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
+app.post('/api/auth/reset-password', (req, res) => {
+  const { username, phone, newPassword } = req.body;
+  if (!username || !phone || !newPassword) {
+    return res.status(400).json({ success: false, message: 'All fields are required.' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long.' });
+  }
+
+  const users = readData('users.json');
+  const cleanPhoneInput = String(phone).replace(/\D/g, '').slice(-10);
+  
+  const userIndex = users.findIndex(u => {
+    const userPhoneClean = String(u.phone || '').replace(/\D/g, '').slice(-10);
+    return u.username.toLowerCase() === username.trim().toLowerCase() && userPhoneClean === cleanPhoneInput;
+  });
+
+  if (userIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Username or registered mobile number does not match our records.' });
+  }
+
+  users[userIndex].password = newPassword.trim();
+  writeData('users.json', users);
+
+  res.json({ success: true, message: 'Password updated successfully! You can now log in.' });
+});
+
 // --- PRODUCTS API ---
 app.get('/api/products', (req, res) => {
   res.json(readData('products.json'));
