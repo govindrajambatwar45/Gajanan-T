@@ -431,6 +431,7 @@ async function loadProducts() {
 
     tbody.innerHTML = globalProductsList.map(p => `
       <tr>
+        <td class="p-3"><img src="${p.image || '/assets/products/amns-sheet.jpg'}" alt="${p.name}" class="w-10 h-10 object-cover rounded-lg border border-slate-200" onerror="this.src='/assets/logo-gajanan-traders.jpg'"></td>
         <td class="p-3 font-bold text-slate-900">${p.id}</td>
         <td class="p-3"><span class="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-[10px] font-bold border border-blue-100 uppercase">${p.brand}</span></td>
         <td class="p-3 font-semibold text-slate-800">${p.name}</td>
@@ -470,10 +471,23 @@ function setupProductForm() {
     const stockStatus = document.getElementById('prdStockStatus').value;
     
     const thicknessRaw = document.getElementById('prdThicknessOptions').value.trim();
-    const thicknessOptions = thicknessRaw ? thicknessRaw.split(',').map(s => s.trim()) : ['0.45 mm'];
+    const thicknessOptions = thicknessRaw ? thicknessRaw.split(',').map(s => s.trim()) : ['0.50 mm'];
     
     const colorsRaw = document.getElementById('prdColors').value.trim();
     const colors = colorsRaw ? colorsRaw.split(',').map(s => s.trim()) : ['Royal Blue', 'Tile Red', 'Off-White'];
+
+    let image = document.getElementById('prdImage') ? document.getElementById('prdImage').value.trim() : '';
+    const existing = editId ? globalProductsList.find(item => item.id === editId) : null;
+    if (!image && existing && existing.image) {
+      image = existing.image;
+    } else if (!image) {
+      if (category.includes('Pipe')) image = '/assets/products/ms-pipe.jpg';
+      else if (category.includes('Welding')) image = '/assets/products/mangalam-welding-rod.jpg';
+      else if (category.includes('Jali')) image = '/assets/products/chain-link-jali.jpg';
+      else if (category.includes('Fastener')) image = '/assets/products/roofing-screws.jpg';
+      else if (category.includes('Accessories')) image = '/assets/products/cutting-wheel.jpg';
+      else image = '/assets/products/amns-sheet.jpg';
+    }
 
     const description = document.getElementById('prdDescription').value.trim();
 
@@ -486,6 +500,7 @@ function setupProductForm() {
       stockStatus,
       thicknessOptions,
       colors,
+      image,
       description
     };
 
@@ -526,6 +541,7 @@ function openNewProductModal() {
   const form = document.getElementById('productForm');
   if (form) form.reset();
   document.getElementById('prdEditId').value = '';
+  if (document.getElementById('prdImage')) document.getElementById('prdImage').value = '';
   document.getElementById('productModalTitle').innerHTML = '<i class="fa-solid fa-boxes-stacked text-blue-800 mr-2"></i> Add New Product';
   document.getElementById('productModal').classList.remove('hidden');
 }
@@ -537,12 +553,13 @@ function openEditProductModal(productId) {
   document.getElementById('prdEditId').value = p.id;
   document.getElementById('prdName').value = p.name || '';
   document.getElementById('prdBrand').value = p.brand || 'TATA';
-  document.getElementById('prdCategory').value = p.category || 'Color Coated Sheet';
+  document.getElementById('prdCategory').value = p.category || 'Roofing Sheet';
   document.getElementById('prdRate').value = p.ratePerUnit || p.ratePerSqFt || 0;
-  document.getElementById('prdUnit').value = p.unit || 'sq ft';
+  document.getElementById('prdUnit').value = p.unit || 'kg';
   document.getElementById('prdStockStatus').value = p.stockStatus || 'In Stock';
   document.getElementById('prdThicknessOptions').value = (p.thicknessOptions || []).join(', ');
   document.getElementById('prdColors').value = (p.colors || []).join(', ');
+  if (document.getElementById('prdImage')) document.getElementById('prdImage').value = p.image || '';
   document.getElementById('prdDescription').value = p.description || '';
 
   document.getElementById('productModalTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-800 mr-2"></i> Edit Product Rate (${p.id})`;
