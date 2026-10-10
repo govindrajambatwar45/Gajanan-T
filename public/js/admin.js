@@ -435,7 +435,7 @@ async function loadProducts() {
         <td class="p-3"><span class="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-[10px] font-bold border border-blue-100 uppercase">${p.brand}</span></td>
         <td class="p-3 font-semibold text-slate-800">${p.name}</td>
         <td class="p-3 text-slate-600">${p.category}</td>
-        <td class="p-3 font-black text-slate-900 text-sm">₹${p.ratePerSqFt}</td>
+        <td class="p-3 font-black text-slate-900 text-sm">₹${p.ratePerUnit || p.ratePerSqFt || 0}</td>
         <td class="p-3 text-slate-500">${p.unit}</td>
         <td class="p-3"><span class="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full text-[10px] font-bold border border-emerald-100">${p.stockStatus || 'In Stock'}</span></td>
         <td class="p-3 text-right space-x-1">
@@ -465,7 +465,7 @@ function setupProductForm() {
     const name = document.getElementById('prdName').value.trim();
     const brand = document.getElementById('prdBrand').value;
     const category = document.getElementById('prdCategory').value;
-    const ratePerSqFt = parseFloat(document.getElementById('prdRate').value) || 0;
+    const ratePerUnit = parseFloat(document.getElementById('prdRate').value) || 0;
     const unit = document.getElementById('prdUnit').value;
     const stockStatus = document.getElementById('prdStockStatus').value;
     
@@ -481,7 +481,7 @@ function setupProductForm() {
       name,
       brand,
       category,
-      ratePerSqFt,
+      ratePerUnit,
       unit,
       stockStatus,
       thicknessOptions,
@@ -538,7 +538,7 @@ function openEditProductModal(productId) {
   document.getElementById('prdName').value = p.name || '';
   document.getElementById('prdBrand').value = p.brand || 'TATA';
   document.getElementById('prdCategory').value = p.category || 'Color Coated Sheet';
-  document.getElementById('prdRate').value = p.ratePerSqFt || 60;
+  document.getElementById('prdRate').value = p.ratePerUnit || p.ratePerSqFt || 0;
   document.getElementById('prdUnit').value = p.unit || 'sq ft';
   document.getElementById('prdStockStatus').value = p.stockStatus || 'In Stock';
   document.getElementById('prdThicknessOptions').value = (p.thicknessOptions || []).join(', ');
@@ -622,14 +622,14 @@ function setupInvoiceForm() {
     const length = parseFloat(lengthEl.value) || 0;
     const qty = parseInt(qtyEl.value) || 0;
     const rate = parseFloat(rateEl.value) || 0;
-    const width = 3.5;
+    const weightPerSheet = 16; // Fixed 15.6-16 kg per sheet
 
-    const totalSqFt = length * width * qty;
-    const subtotal = Math.round(totalSqFt * rate);
+    const totalWeight = weightPerSheet * qty;
+    const subtotal = Math.round(totalWeight * rate);
     const gst = Math.round(subtotal * 0.18);
     const grandTotal = subtotal + gst;
 
-    sqftEl.value = totalSqFt.toFixed(1);
+    sqftEl.value = totalWeight.toFixed(1) + ' KG';
     document.getElementById('invCalcSubtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
     document.getElementById('invCalcGst').textContent = `₹${gst.toLocaleString('en-IN')}`;
     document.getElementById('invCalcGrandTotal').textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
@@ -647,8 +647,9 @@ function setupInvoiceForm() {
     const rate = parseFloat(rateEl.value);
     const length = parseFloat(lengthEl.value);
     const qty = parseInt(qtyEl.value);
-    const sqft = parseFloat(sqftEl.value);
-    const amount = Math.round(sqft * rate);
+    const weightPerSheet = 16;
+    const totalWeight = weightPerSheet * qty;
+    const amount = Math.round(totalWeight * rate);
     const gst = Math.round(amount * 0.18);
     const grandTotal = amount + gst;
 
@@ -659,13 +660,12 @@ function setupInvoiceForm() {
       items: [
         {
           brand,
-          type: 'Trapezoidal Sheet',
+          type: color ? 'Roofing Sheet' : brand,
           color,
           thickness,
           lengthFt: length,
-          widthFt: 3.5,
+          weightKg: totalWeight,
           quantity: qty,
-          sqft,
           rate,
           amount
         }
@@ -835,10 +835,10 @@ async function viewPrintInvoice(invId) {
     tbody.innerHTML = (inv.items || []).map((item, idx) => `
       <tr>
         <td class="p-2 border-r text-center font-semibold">${idx + 1}</td>
-        <td class="p-2 border-r font-medium">${item.brand || 'Roofing Sheet'} ${item.color || ''} (${item.thickness || ''}) - ${item.quantity || 1} Pcs @ ${item.lengthFt || 12} Ft Length</td>
+        <td class="p-2 border-r font-medium">${item.brand || 'Item'} ${item.color || ''} ${item.thickness ? '(' + item.thickness + ')' : ''} - ${item.quantity || 1} Pcs</td>
         <td class="p-2 border-r text-center">7210</td>
-        <td class="p-2 border-r text-center">${item.sqft || (item.lengthFt * 3.5 * item.quantity)} Sq Ft</td>
-        <td class="p-2 border-r text-right">₹${item.rate}</td>
+        <td class="p-2 border-r text-center">${item.weightKg ? item.weightKg + ' KG' : (item.sqft || '-')}</td>
+        <td class="p-2 border-r text-right">₹${item.rate}/kg</td>
         <td class="p-2 text-right font-bold">₹${(item.amount || 0).toLocaleString('en-IN')}</td>
       </tr>
     `).join('');
@@ -865,7 +865,7 @@ function sendInvoiceWhatsApp(invId) {
     const item = (inv.items && inv.items[0]) ? inv.items[0] : {};
     const msg = `*GAJANAN TRADERS - TAX INVOICE*
 Near Uddhav Nagri, Nanded Road, Naigaon Bz (431709)
-Phone: +91 9767228008
+Phone: +91 9767228008 | GSTIN: 27ABNPM4468Q1ZN
 
 Invoice #: ${inv.id}
 Date: ${inv.date}
