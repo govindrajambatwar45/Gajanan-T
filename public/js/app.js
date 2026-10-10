@@ -5,7 +5,7 @@ let currentTheme = localStorage.getItem('gt_theme') || 'theme-blue';
 
 const i18n = {
   en: {
-    brandSub: "Roofing Sheet Manufacturer & Authorised Dealer",
+    brandSub: "Authorised Dealer of Tata Shaktee & All Types Fabrication Items",
     navProducts: "Products",
     navOwner: "About Owner",
     navMfg: "Custom Manufacturing",
@@ -14,26 +14,26 @@ const i18n = {
     navLoc: "Contact & Location",
     waBtn: "WhatsApp",
     callBtn: "Call Shop",
-    heroBadge: "Direct Manufacturer & Authorized Distributorship",
-    heroTitle: "Premium Roofing Sheets",
-    heroSubtitle: "Custom Colors & Exact Lengths",
-    heroDesc: "Authorised dealer for TATA Shaktee, JSW Pragati & Jindal Steel. In-house manufacturing of custom trapezoidal profiles, tile profiles, and custom color-coated sheets tailored to your building requirements in Naigaon Bz, Nanded.",
+    heroBadge: "Authorised Dealer & Fabrication Items",
+    heroTitle: "Roofing Sheets & Steel Items",
+    heroSubtitle: "TATA Shaktee Authorised Dealer",
+    heroDesc: "Authorised dealer for TATA Shaktee. Roofing Sheets (AM/NS, JINDAL Panther, JINDAL Sabrang, TATA PRISMA, TATA BLUSCOPE), MS Pipe, MS Angle, MS Channels, Mangalam Welding Rod, Chain Link Jali, Weld Mesh Jali, Screws, Cutting Wheels & All Types Fabrication Items. Naigaon Bz, Nanded.",
     heroCalcBtn: "Calculate Sheet Requirement",
     heroWaBtn: "Instant WhatsApp Quote",
     heroLocBtn: "Open Location",
     quickInqTitle: "Quick Material Inquiry",
-    lblBrand: "Select Brand",
+    lblBrand: "Select Brand / Item",
     lblColor: "Color Required",
     lblThickness: "Thickness (mm)",
     lblMobile: "Your Mobile Number",
     sendWaReq: "Send WhatsApp Price Request",
-    productsTitle: "Authorised Roofing Sheets & Accessories",
-    productsDesc: "Available in stock at our Naigaon shop or manufactured to your custom size and color profile.",
+    productsTitle: "Our Complete Product Range",
+    productsDesc: "Roofing Sheets, MS Pipe, MS Angle, Welding Rod, Jali, Screws & All Types Fabrication Items available at our Naigaon shop.",
     meetOwnerBadge: "Meet The Owner",
     ownerHeadline: "Leadership Dedicated to Quality Steel & Customer Trust",
     ownerWelcome: '"Welcome to Gajanan Traders! I am Mr. Pankaj Medewar, proprietor of Gajanan Traders in Naigaon Bz."',
-    ownerBio1: "For years, our shop near Uddhav Nagri has served contractors, farmers, residential homeowners, and commercial builders across Naigaon, Nanded, Umri, Degloor, and Biloli. As authorized dealers for premier steel manufacturers like TATA Shaktee, JSW Pragati, and Jindal Steel, we take pride in delivering 100% genuine, high-strength roofing sheets.",
-    ownerBio2: "Our in-house roll-forming factory produces custom color-coated trapezoidal sheets, tile profiles, and crimp curved sheets cut to your exact length specifications—eliminating wastage and saving money on your building project.",
+    ownerBio1: "For years, our shop near Uddhav Nagri has served contractors, farmers, residential homeowners, and commercial builders across Naigaon, Nanded, Umri, Degloor, and Biloli. As authorized dealers for TATA Shaktee, we take pride in delivering 100% genuine, high-strength roofing sheets along with MS Pipe, MS Angle, Welding Rod and all types of fabrication items.",
+    ownerBio2: "Our shop provides a complete range of steel and construction materials including roofing sheets from multiple brands, MS Pipe, MS Angle, MS Channels, Mangalam Welding Rods, Chain Link Jali, Weld Mesh Jali, Screws, Cutting Wheels and all types of fabrication items.",
     calcTitle: "Roofing Sheet Requirement Calculator",
     calcSub: "Select your roof specs to get instant total square footage and estimate.",
     enqTitle: "Submit Online Order Enquiry",
@@ -185,10 +185,14 @@ async function loadPublicProducts() {
       return;
     }
 
-    grid.innerHTML = products.map(p => `
+    grid.innerHTML = products.map(p => {
+      const rate = p.ratePerUnit || p.ratePerSqFt || 0;
+      const hasSheetSpecs = p.sheetSize || p.sheetWeight;
+      const hasThickness = p.thicknessOptions && p.thicknessOptions.length > 0;
+      const hasColors = p.colors && p.colors.length > 0;
+      
+      return `
       <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition flex flex-col justify-between">
-        ${p.image ? `<div class="h-44 overflow-hidden bg-slate-100 relative border-b border-slate-100"><img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover hover:scale-105 transition duration-300"></div>` : ''}
-        
         <div class="p-5 flex-grow flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-start mb-2">
@@ -200,15 +204,18 @@ async function loadPublicProducts() {
             <p class="text-xs text-slate-600 mb-3 leading-relaxed line-clamp-2">${p.description}</p>
             
             <div class="bg-slate-50 p-2.5 rounded-xl space-y-1 text-xs mb-4">
-              <div class="flex justify-between"><span class="text-slate-500">Thickness:</span> <span class="font-semibold text-slate-800">${(p.thicknessOptions || []).join(', ')}</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Colors:</span> <span class="font-semibold text-slate-800">${(p.colors || []).join(', ')}</span></div>
+              ${hasThickness ? `<div class="flex justify-between"><span class="text-slate-500">Thickness:</span> <span class="font-semibold text-slate-800">${p.thicknessOptions.join(', ')}</span></div>` : ''}
+              ${hasColors ? `<div class="flex justify-between"><span class="text-slate-500">Colors:</span> <span class="font-semibold text-slate-800">${p.colors.join(', ')}</span></div>` : ''}
+              ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Sheet Size:</span> <span class="font-semibold text-slate-800">${p.sheetSize || '-'}</span></div>` : ''}
+              ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Weight:</span> <span class="font-semibold text-slate-800">${p.sheetWeight || '-'}</span></div>` : ''}
+              <div class="flex justify-between"><span class="text-slate-500">Category:</span> <span class="font-semibold text-slate-800">${p.category || '-'}</span></div>
             </div>
           </div>
 
           <div>
             <div class="flex justify-between items-baseline pt-3 border-t border-slate-100 mb-3">
-              <span class="text-xs text-slate-500">Baseline Rate:</span>
-              <span class="text-xl font-black text-slate-900">₹${p.ratePerSqFt} <span class="text-xs font-normal text-slate-500">/ ${p.unit}</span></span>
+              <span class="text-xs text-slate-500">Rate:</span>
+              <span class="text-xl font-black text-slate-900">${rate > 0 ? '₹' + rate : 'Contact'} <span class="text-xs font-normal text-slate-500">/ ${p.unit}</span></span>
             </div>
 
             <a href="https://wa.me/919767228008?text=${encodeURIComponent(`Hi Gajanan Traders, I want to check stock and price for ${p.name}.`)}" target="_blank" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition">
@@ -217,7 +224,7 @@ async function loadPublicProducts() {
           </div>
         </div>
       </div>
-    `).join('');
+    `}).join('');
 
   } catch (err) {
     console.error('Error loading products:', err);
