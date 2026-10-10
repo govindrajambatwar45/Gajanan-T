@@ -177,8 +177,25 @@ async function loadPublicProducts() {
   if (!grid) return;
 
   try {
-    const res = await fetch('/api/products');
-    const products = await res.json();
+    let products = [];
+    try {
+      const res = await fetch('/api/products');
+      if (res.ok) {
+        products = await res.json();
+        if (products && products.length > 0) {
+          localStorage.setItem('gt_public_products', JSON.stringify(products));
+        }
+      }
+    } catch (e) {
+      console.warn('Network error loading products, checking local cache:', e);
+    }
+
+    if (!products || products.length === 0) {
+      const cached = localStorage.getItem('gt_public_products');
+      if (cached) {
+        try { products = JSON.parse(cached); } catch (err) {}
+      }
+    }
 
     if (!products || products.length === 0) {
       grid.innerHTML = `<p class="col-span-3 text-center text-slate-500 py-8">No products available at the moment.</p>`;
@@ -190,13 +207,19 @@ async function loadPublicProducts() {
       const hasSheetSpecs = p.sheetSize || p.sheetWeight;
       const hasThickness = p.thicknessOptions && p.thicknessOptions.length > 0;
       const hasColors = p.colors && p.colors.length > 0;
+      const prodImg = p.image || '/assets/products/amns-sheet.jpg';
       
       return `
-      <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition flex flex-col justify-between">
+      <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition flex flex-col justify-between group">
+        <div class="h-44 sm:h-48 overflow-hidden bg-slate-900 relative border-b border-slate-100">
+          <img src="${prodImg}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='/assets/logo-gajanan-traders.jpg'">
+          <span class="absolute top-2.5 left-2.5 bg-slate-900/90 text-amber-400 text-[10px] font-black px-2.5 py-0.5 rounded shadow uppercase tracking-wide">${p.brand}</span>
+        </div>
+
         <div class="p-5 flex-grow flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-start mb-2">
-              <span class="bg-blue-50 text-blue-800 text-[11px] font-black px-2.5 py-1 rounded-md border border-blue-100 uppercase">${p.brand}</span>
+              <span class="bg-blue-50 text-blue-800 text-[11px] font-black px-2.5 py-1 rounded-md border border-blue-100 uppercase">${p.category || 'Steel'}</span>
               <span class="bg-emerald-50 text-emerald-700 text-[11px] font-bold px-2 py-0.5 rounded-full border border-emerald-100">${p.stockStatus || 'In Stock'}</span>
             </div>
             
@@ -208,17 +231,17 @@ async function loadPublicProducts() {
               ${hasColors ? `<div class="flex justify-between"><span class="text-slate-500">Colors:</span> <span class="font-semibold text-slate-800">${p.colors.join(', ')}</span></div>` : ''}
               ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Sheet Size:</span> <span class="font-semibold text-slate-800">${p.sheetSize || '-'}</span></div>` : ''}
               ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Weight:</span> <span class="font-semibold text-slate-800">${p.sheetWeight || '-'}</span></div>` : ''}
-              <div class="flex justify-between"><span class="text-slate-500">Category:</span> <span class="font-semibold text-slate-800">${p.category || '-'}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Pricing Unit:</span> <span class="font-semibold text-slate-800">Per ${p.unit || 'kg'}</span></div>
             </div>
           </div>
 
           <div>
             <div class="flex justify-between items-baseline pt-3 border-t border-slate-100 mb-3">
               <span class="text-xs text-slate-500">Rate:</span>
-              <span class="text-xl font-black text-slate-900">${rate > 0 ? '₹' + rate : 'Contact'} <span class="text-xs font-normal text-slate-500">/ ${p.unit}</span></span>
+              <span class="text-xl font-black text-slate-900">${rate > 0 ? '₹' + rate : 'Contact'} <span class="text-xs font-normal text-slate-500">/ ${p.unit || 'kg'}</span></span>
             </div>
 
-            <a href="https://wa.me/919767228008?text=${encodeURIComponent(`Hi Gajanan Traders, I want to check stock and price for ${p.name}.`)}" target="_blank" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+            <a href="https://wa.me/919767228008?text=${encodeURIComponent(`Hi Gajanan Traders, I want to check stock and price for ${p.name}.`)}" target="_blank" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
               <i class="fa-brands fa-whatsapp text-sm"></i> ${currentLang === 'mr' ? 'व्हॉट्सॲपवर दर मागवा' : 'WhatsApp Price Quote'}
             </a>
           </div>
@@ -278,6 +301,43 @@ function setupCalculator() {
       const color = colorSelect.value;
       const totalSqFt = document.getElementById('resTotalSqFt').textContent;
       const grandTotal = document.getElementById('resGrandTotal').textContent;
+      const baseCost = parseFloat(document.getElementById('resBaseCost').textContent.replace(/[^0-9.]/g, '')) || 0;
+      const gstCost = parseFloat(document.getElementById('resGst').textContent.replace(/[^0-9.]/g, '')) || 0;
+      const totalNum = parseFloat(grandTotal.replace(/[^0-9.]/g, '')) || 0;
+
+      // Automatically record quotation request on server so admin sees it in history
+      fetch('/api/enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: 'Customer (Calculator Quote)',
+          phone: 'Online Website User',
+          city: 'Naigaon Bz',
+          brandPreference: brand,
+          message: `Calculated Specs: ${qty} Sheets of ${length} Ft (${color}, ${thickness}) - Total Area: ${totalSqFt} - Est. Total: ${grandTotal}`
+        })
+      }).catch(err => console.warn('Could not auto-save calculator enquiry:', err));
+
+      fetch('/api/quotations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: 'Website Calculator Quote',
+          customerPhone: 'Online Lead',
+          items: [{
+            brand,
+            description: `${brand} Roofing Sheet (${color}, ${thickness}) - ${qty} Pcs @ ${length} Ft`,
+            quantity: qty,
+            sqft: totalSqFt,
+            rate: parseFloat(brandSelect.options[brandSelect.selectedIndex]?.getAttribute('data-rate')) || 60,
+            amount: baseCost
+          }],
+          subtotal: baseCost,
+          totalGst: gstCost,
+          grandTotal: totalNum,
+          status: 'Sent'
+        })
+      }).catch(err => console.warn('Could not auto-save quotation:', err));
 
       const msg = `Hello Gajanan Traders (Naigaon), I calculated my roofing requirement:
 - Brand: ${brand}
@@ -304,6 +364,19 @@ function setupHeroForm() {
     const color = document.getElementById('heroColor').value;
     const thickness = document.getElementById('heroThickness').value;
     const phone = document.getElementById('heroPhone').value;
+
+    // Automatically record inquiry on server for admin history
+    fetch('/api/enquiries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customerName: 'Quick Inquiry Customer',
+        phone: phone,
+        city: 'Naigaon Bz',
+        brandPreference: brand,
+        message: `Quick Price Request: Brand ${brand}, Color ${color}, Thickness ${thickness}`
+      })
+    }).catch(err => console.warn('Could not auto-save hero enquiry:', err));
 
     const msg = `Hi Gajanan Traders, my phone is ${phone}. I need a price quote for:
 - Brand: ${brand}
