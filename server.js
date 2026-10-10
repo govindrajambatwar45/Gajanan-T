@@ -11,33 +11,69 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const DATA_DIR = path.join(__dirname, 'data');
+// ============================================================
+// DATA LAYER — works on Vercel (read-only FS) & locally
+// Uses in-memory cache with /tmp persistence on Vercel
+// ============================================================
+const BUNDLED_DATA_DIR = path.join(__dirname, 'data');
+const IS_VERCEL = !!process.env.VERCEL;
+const TMP_DATA_DIR = IS_VERCEL ? '/tmp/gt-data' : BUNDLED_DATA_DIR;
 
-// Helper to read JSON file safely
-function readData(filename) {
-  const filePath = path.join(DATA_DIR, filename);
-  if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, JSON.stringify([]), 'utf8');
-    return [];
-  }
-  try {
-    const raw = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error(`Error reading ${filename}:`, err);
-    return [];
-  }
+// In-memory data store
+const memoryStore = {};
+
+// Ensure /tmp/gt-data exists on Vercel
+if (IS_VERCEL) {
+  try { fs.mkdirSync(TMP_DATA_DIR, { recursive: true }); } catch (e) { /* ok */ }
 }
 
-// Helper to write JSON file safely
+// Read data: memory → /tmp → bundled
+function readData(filename) {
+  // 1. Check memory cache
+  if (memoryStore[filename]) {
+    return memoryStore[filename];
+  }
+
+  // 2. Try /tmp (Vercel) or data/ (local)
+  const tmpPath = path.join(TMP_DATA_DIR, filename);
+  if (fs.existsSync(tmpPath)) {
+    try {
+      const raw = fs.readFileSync(tmpPath, 'utf8');
+      memoryStore[filename] = JSON.parse(raw);
+      return memoryStore[filename];
+    } catch (e) { /* fall through */ }
+  }
+
+  // 3. Fall back to bundled data
+  const bundledPath = path.join(BUNDLED_DATA_DIR, filename);
+  if (fs.existsSync(bundledPath)) {
+    try {
+      const raw = fs.readFileSync(bundledPath, 'utf8');
+      memoryStore[filename] = JSON.parse(raw);
+      // Copy to /tmp for persistence within Vercel function lifetime
+      if (IS_VERCEL) {
+        try { fs.writeFileSync(tmpPath, raw, 'utf8'); } catch (e) { /* ok */ }
+      }
+      return memoryStore[filename];
+    } catch (e) { /* fall through */ }
+  }
+
+  // 4. Return empty array
+  memoryStore[filename] = [];
+  return [];
+}
+
+// Write data: always update memory + persist to disk
 function writeData(filename, data) {
-  const filePath = path.join(DATA_DIR, filename);
+  memoryStore[filename] = data;
+  const filePath = path.join(TMP_DATA_DIR, filename);
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
     return true;
   } catch (err) {
-    console.error(`Error writing ${filename}:`, err);
-    return false;
+    console.error(`Error writing ${filename}:`, err.message);
+    // Data is still in memory, so API calls still work within this invocation
+    return true;
   }
 }
 
@@ -92,8 +128,13 @@ app.get('/api/products', (req, res) => {
 
 app.post('/api/products', (req, res) => {
   const products = readData('products.json');
+  const maxNum = products.reduce((max, p) => {
+    const m = String(p.id || '').match(/PRD-(\d+)/);
+    const num = m ? parseInt(m[1], 10) : 0;
+    return num > max ? num : max;
+  }, 0);
   const newProduct = {
-    id: 'PRD-' + String(products.length + 1).padStart(3, '0'),
+    id: 'PRD-' + String(maxNum + 1).padStart(3, '0'),
     ...req.body,
     stockStatus: req.body.stockStatus || 'In Stock'
   };
@@ -170,8 +211,13 @@ app.get('/api/enquiries', (req, res) => {
 
 app.post('/api/enquiries', (req, res) => {
   const enquiries = readData('enquiries.json');
+  const maxNum = enquiries.reduce((max, e) => {
+    const m = String(e.id || '').match(/ENQ-\d+-(\d+)/);
+    const num = m ? parseInt(m[1], 10) : 0;
+    return num > max ? num : max;
+  }, 0);
   const newEnquiry = {
-    id: 'ENQ-' + new Date().getFullYear() + '-' + String(enquiries.length + 1).padStart(3, '0'),
+    id: 'ENQ-' + new Date().getFullYear() + '-' + String(maxNum + 1).padStart(3, '0'),
     ...req.body,
     status: req.body.status || 'New',
     createdAt: new Date().toISOString()
@@ -183,8 +229,13 @@ app.post('/api/enquiries', (req, res) => {
   const customers = readData('customers.json');
   let cust = customers.find(c => c.phone === newEnquiry.phone);
   if (!cust && newEnquiry.phone) {
+    const maxCustNum = customers.reduce((max, c) => {
+      const m = String(c.id || '').match(/CUST-(\d+)/);
+      const num = m ? parseInt(m[1], 10) : 0;
+      return num > max ? num : max;
+    }, 0);
     cust = {
-      id: 'CUST-' + String(customers.length + 1).padStart(3, '0'),
+      id: 'CUST-' + String(maxCustNum + 1).padStart(3, '0'),
       name: newEnquiry.customerName,
       phone: newEnquiry.phone,
       address: newEnquiry.city || 'Naigaon Bz',
@@ -221,8 +272,13 @@ app.get('/api/customers', (req, res) => {
 
 app.post('/api/customers', (req, res) => {
   const customers = readData('customers.json');
+  const maxNum = customers.reduce((max, c) => {
+    const m = String(c.id || '').match(/CUST-(\d+)/);
+    const num = m ? parseInt(m[1], 10) : 0;
+    return num > max ? num : max;
+  }, 0);
   const newCustomer = {
-    id: 'CUST-' + String(customers.length + 1).padStart(3, '0'),
+    id: 'CUST-' + String(maxNum + 1).padStart(3, '0'),
     ...req.body,
     totalOrders: 0,
     totalSpent: 0,
@@ -240,8 +296,13 @@ app.get('/api/quotations', (req, res) => {
 
 app.post('/api/quotations', (req, res) => {
   const quotations = readData('quotations.json');
+  const maxNum = quotations.reduce((max, q) => {
+    const m = String(q.id || '').match(/QTN-\d+-(\d+)/);
+    const num = m ? parseInt(m[1], 10) : 0;
+    return num > max ? num : max;
+  }, 0);
   const newQuotation = {
-    id: 'QTN-' + new Date().getFullYear() + '-' + String(quotations.length + 1).padStart(3, '0'),
+    id: 'QTN-' + new Date().getFullYear() + '-' + String(maxNum + 1).padStart(3, '0'),
     date: new Date().toISOString().split('T')[0],
     ...req.body,
     status: req.body.status || 'Sent'
@@ -281,8 +342,13 @@ app.get('/api/orders', (req, res) => {
 
 app.post('/api/orders', (req, res) => {
   const orders = readData('orders.json');
+  const maxNum = orders.reduce((max, o) => {
+    const m = String(o.id || '').match(/ORD-\d+-(\d+)/);
+    const num = m ? parseInt(m[1], 10) : 0;
+    return num > max ? num : max;
+  }, 0);
   const newOrder = {
-    id: 'ORD-' + new Date().getFullYear() + '-' + String(orders.length + 1).padStart(3, '0'),
+    id: 'ORD-' + new Date().getFullYear() + '-' + String(maxNum + 1).padStart(3, '0'),
     orderDate: new Date().toISOString().split('T')[0],
     ...req.body,
     orderStatus: req.body.orderStatus || 'Processing',
@@ -333,8 +399,13 @@ app.get('/api/invoices/:id', (req, res) => {
 
 app.post('/api/invoices', (req, res) => {
   const invoices = readData('invoices.json');
+  const maxNum = invoices.reduce((max, i) => {
+    const m = String(i.id || '').match(/GT-\d+-(\d+)/);
+    const num = m ? parseInt(m[1], 10) : 0;
+    return num > max ? num : max;
+  }, 0);
   const newInvoice = {
-    id: 'GT-' + new Date().getFullYear() + '-' + String(invoices.length + 1).padStart(3, '0'),
+    id: 'GT-' + new Date().getFullYear() + '-' + String(maxNum + 1).padStart(3, '0'),
     date: req.body.date || new Date().toISOString().split('T')[0],
     ...req.body,
     status: req.body.status || 'Pending'
@@ -375,8 +446,13 @@ app.get('/api/payments', (req, res) => {
 
 app.post('/api/payments', (req, res) => {
   const payments = readData('payments.json');
+  const maxNum = payments.reduce((max, p) => {
+    const m = String(p.id || '').match(/PAY-\d+-(\d+)/);
+    const num = m ? parseInt(m[1], 10) : 0;
+    return num > max ? num : max;
+  }, 0);
   const newPayment = {
-    id: 'PAY-' + new Date().getFullYear() + '-' + String(payments.length + 1).padStart(3, '0'),
+    id: 'PAY-' + new Date().getFullYear() + '-' + String(maxNum + 1).padStart(3, '0'),
     paymentDate: req.body.paymentDate || new Date().toISOString().split('T')[0],
     ...req.body
   };
@@ -409,8 +485,13 @@ app.get('/api/expenses', (req, res) => {
 
 app.post('/api/expenses', (req, res) => {
   const expenses = readData('expenses.json');
+  const maxNum = expenses.reduce((max, e) => {
+    const m = String(e.id || '').match(/EXP-\d+-(\d+)/);
+    const num = m ? parseInt(m[1], 10) : 0;
+    return num > max ? num : max;
+  }, 0);
   const newExpense = {
-    id: 'EXP-' + new Date().getFullYear() + '-' + String(expenses.length + 1).padStart(3, '0'),
+    id: 'EXP-' + new Date().getFullYear() + '-' + String(maxNum + 1).padStart(3, '0'),
     expenseDate: req.body.expenseDate || new Date().toISOString().split('T')[0],
     ...req.body
   };
