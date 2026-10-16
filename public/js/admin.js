@@ -260,15 +260,34 @@ async function loadEnquiries() {
         <td class="p-3"><span class="bg-blue-50 text-blue-800 px-2 py-0.5 rounded text-[10px] font-bold border border-blue-100">${e.brandPreference || 'Standard'}</span></td>
         <td class="p-3 text-slate-600 max-w-xs truncate">${e.message || `${e.quantity || 10} sheets of ${e.sheetLengthFt || 12}ft (${e.requiredColor || 'Standard'})`}</td>
         <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${e.status === 'Quoted' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}">${e.status}</span></td>
-        <td class="p-3 text-right">
+        <td class="p-3 text-right whitespace-nowrap space-x-1">
           <button onclick="convertEnquiryToQuotation('${e.id}')" class="bg-blue-800 hover:bg-blue-900 text-white px-2.5 py-1 rounded text-[11px] font-bold shadow-sm">
             <i class="fa-solid fa-file-export mr-1"></i> Make Quote
+          </button>
+          <button onclick="deleteEnquiry('${e.id}')" class="text-red-500 hover:text-red-700 px-2 py-1 font-bold text-xs" title="Delete Enquiry">
+            <i class="fa-solid fa-trash"></i>
           </button>
         </td>
       </tr>
     `).join('');
   } catch (err) {
     console.error(err);
+  }
+}
+
+async function deleteEnquiry(enqId) {
+  if (confirm(`Are you sure you want to delete enquiry ${enqId}? This enquiry will be permanently removed.`)) {
+    try {
+      const res = await fetch(`/api/enquiries/${enqId}`, { method: 'DELETE' });
+      if (res.ok) {
+        await loadEnquiries();
+      } else {
+        alert('Failed to delete enquiry.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting enquiry.');
+    }
   }
 }
 
@@ -290,18 +309,37 @@ async function loadQuotations() {
         <td class="p-3 text-slate-600">₹${(q.totalGst || 0).toLocaleString('en-IN')}</td>
         <td class="p-3 font-black text-slate-900">₹${(q.grandTotal || 0).toLocaleString('en-IN')}</td>
         <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${q.status === 'Accepted' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${q.status}</span></td>
-        <td class="p-3 text-right space-x-1">
-          <button onclick="sendQuotationWhatsApp('${q.id}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-[11px] font-bold">
+        <td class="p-3 text-right whitespace-nowrap space-x-1">
+          <button onclick="sendQuotationWhatsApp('${q.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[11px] font-bold">
             <i class="fa-brands fa-whatsapp"></i> WA
           </button>
-          <button onclick="convertQuotationToOrder('${q.id}')" class="bg-slate-900 text-white px-2 py-1 rounded text-[11px] font-bold">
+          <button onclick="convertQuotationToOrder('${q.id}')" class="bg-slate-900 hover:bg-slate-800 text-white px-2 py-1 rounded text-[11px] font-bold">
             <i class="fa-solid fa-check"></i> Convert Order
+          </button>
+          <button onclick="deleteQuotation('${q.id}')" class="text-red-500 hover:text-red-700 px-2 py-1 font-bold text-xs" title="Delete Quotation">
+            <i class="fa-solid fa-trash"></i>
           </button>
         </td>
       </tr>
     `).join('');
   } catch (err) {
     console.error(err);
+  }
+}
+
+async function deleteQuotation(qtnId) {
+  if (confirm(`Are you sure you want to delete quotation ${qtnId}? This quotation will be permanently removed.`)) {
+    try {
+      const res = await fetch(`/api/quotations/${qtnId}`, { method: 'DELETE' });
+      if (res.ok) {
+        await loadQuotations();
+      } else {
+        alert('Failed to delete quotation.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting quotation.');
+    }
   }
 }
 
@@ -420,6 +458,8 @@ async function loadCustomers() {
 
 // 8. PRODUCTS (With Edit Rate & Delete Actions)
 let globalProductsList = [];
+// Stores the currently selected product image (base64 or URL), independent of form.reset()
+let _selectedProductImage = '';
 
 async function loadProducts() {
   const tbody = document.getElementById('productsTableBody');
@@ -454,10 +494,73 @@ async function loadProducts() {
   }
 }
 
+// Global handler called by onchange on the file input - most reliable approach
+function handleProductPhotoSelect(inputEl) {
+  const file = inputEl.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    alert('Please select an image file (JPG, JPEG, PNG, etc.)');
+    inputEl.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+      const maxDim = 800;
+
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      // Store in module-level variable — survives form.reset()
+      _selectedProductImage = compressedDataUrl;
+
+      const imgInput = document.getElementById('prdImage');
+      const preview = document.getElementById('prdImagePreview');
+      if (imgInput) imgInput.value = compressedDataUrl;
+      if (preview) preview.src = compressedDataUrl;
+    };
+    img.src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 // PRODUCT MANAGEMENT (ADD / EDIT / DELETE)
 function setupProductForm() {
   const form = document.getElementById('productForm');
   if (!form) return;
+
+  const fileInput = document.getElementById('prdImageFileInput');
+  const imgInput = document.getElementById('prdImage');
+  const preview = document.getElementById('prdImagePreview');
+
+  // Live preview when manual URL is entered
+  if (imgInput) {
+    imgInput.addEventListener('input', () => {
+      _selectedProductImage = imgInput.value.trim();
+      if (preview) {
+        preview.src = _selectedProductImage || '/assets/products/amns-sheet.jpg';
+      }
+    });
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -476,7 +579,8 @@ function setupProductForm() {
     const colorsRaw = document.getElementById('prdColors').value.trim();
     const colors = colorsRaw ? colorsRaw.split(',').map(s => s.trim()) : ['Royal Blue', 'Tile Red', 'Off-White'];
 
-    let image = document.getElementById('prdImage') ? document.getElementById('prdImage').value.trim() : '';
+    // Use _selectedProductImage first (set by file upload or URL input), then existing, then default
+    let image = _selectedProductImage || (imgInput ? imgInput.value.trim() : '');
     const existing = editId ? globalProductsList.find(item => item.id === editId) : null;
     if (!image && existing && existing.image) {
       image = existing.image;
@@ -507,14 +611,12 @@ function setupProductForm() {
     try {
       let res;
       if (editId) {
-        // Edit existing product
         res = await fetch(`/api/products/${editId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       } else {
-        // Create new product
         res = await fetch('/api/products', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -525,8 +627,11 @@ function setupProductForm() {
       if (res.ok) {
         closeModal('productModal');
         form.reset();
-        loadProducts();
-        alert(editId ? 'Product rate and details updated!' : 'New product added successfully!');
+        await loadProducts();
+        try {
+          localStorage.setItem('gt_public_products', JSON.stringify(globalProductsList));
+        } catch(e) {}
+        alert(editId ? 'Product and photo updated successfully!' : 'New product and photo added successfully!');
       } else {
         alert('Failed to save product.');
       }
@@ -537,11 +642,22 @@ function setupProductForm() {
   });
 }
 
+function clearProductPhoto() {
+  _selectedProductImage = '';
+  const fileInput = document.getElementById('prdImageFileInput');
+  const imgInput = document.getElementById('prdImage');
+  const preview = document.getElementById('prdImagePreview');
+  if (fileInput) fileInput.value = '';
+  if (imgInput) imgInput.value = '';
+  if (preview) preview.src = '/assets/products/amns-sheet.jpg';
+}
+
 function openNewProductModal() {
+  _selectedProductImage = '';
   const form = document.getElementById('productForm');
   if (form) form.reset();
   document.getElementById('prdEditId').value = '';
-  if (document.getElementById('prdImage')) document.getElementById('prdImage').value = '';
+  clearProductPhoto();
   document.getElementById('productModalTitle').innerHTML = '<i class="fa-solid fa-boxes-stacked text-blue-800 mr-2"></i> Add New Product';
   document.getElementById('productModal').classList.remove('hidden');
 }
@@ -559,22 +675,41 @@ function openEditProductModal(productId) {
   document.getElementById('prdStockStatus').value = p.stockStatus || 'In Stock';
   document.getElementById('prdThicknessOptions').value = (p.thicknessOptions || []).join(', ');
   document.getElementById('prdColors').value = (p.colors || []).join(', ');
-  if (document.getElementById('prdImage')) document.getElementById('prdImage').value = p.image || '';
-  document.getElementById('prdDescription').value = p.description || '';
+  
+  const imgInput = document.getElementById('prdImage');
+  const preview = document.getElementById('prdImagePreview');
+  const fileInput = document.getElementById('prdImageFileInput');
+  if (fileInput) fileInput.value = '';
+  // Restore existing image into _selectedProductImage so it's preserved if no new file is chosen
+  _selectedProductImage = p.image || '';
+  if (imgInput) imgInput.value = p.image || '';
+  if (preview) preview.src = p.image || '/assets/products/amns-sheet.jpg';
 
-  document.getElementById('productModalTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-800 mr-2"></i> Edit Product Rate (${p.id})`;
+  document.getElementById('prdDescription').value = p.description || '';
+  document.getElementById('productModalTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-800 mr-2"></i> Edit Product & Photo (${p.id})`;
   document.getElementById('productModal').classList.remove('hidden');
 }
 
 async function deleteProduct(productId) {
-  if (confirm(`Are you sure you want to delete product ${productId}?`)) {
+  if (confirm(`Are you sure you want to delete product ${productId}? It will be permanently removed from public website.`)) {
     try {
       const res = await fetch(`/api/products/${productId}`, { method: 'DELETE' });
       if (res.ok) {
-        loadProducts();
+        await loadProducts();
+        try {
+          const cached = localStorage.getItem('gt_public_products');
+          if (cached) {
+            const list = JSON.parse(cached).filter(item => item.id !== productId);
+            localStorage.setItem('gt_public_products', JSON.stringify(list));
+          }
+        } catch(e) {}
+        alert(`Product ${productId} has been deleted.`);
+      } else {
+        alert('Failed to delete product.');
       }
     } catch (err) {
       console.error(err);
+      alert('Error deleting product.');
     }
   }
 }
