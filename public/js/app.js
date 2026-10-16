@@ -171,86 +171,110 @@ function applyTheme(themeName) {
   document.body.classList.add(themeName);
 }
 
+// Fallback catalog ensuring products NEVER appear empty under any circumstance
+const FALLBACK_PRODUCTS = [
+  { id: "PRD-001", name: "AM/NS Roofing Sheet", brand: "AM/NS", category: "Roofing Sheet", profile: "Trapezoidal", image: "/assets/products/amns-sheet.jpg", thicknessOptions: ["0.50 mm"], colors: ["Royal Blue", "Tile Red", "Off-White", "Mint Green"], ratePerUnit: 0, unit: "kg", sheetSize: "3 feet 6 inch to 15 feet", sheetWeight: "15.6 kg to 16 kg", description: "AM/NS premium color-coated roofing sheet. Fixed size 3'6\" to 15 ft, weight 15.6-16 kg, 0.50mm thickness only.", stockStatus: "In Stock" },
+  { id: "PRD-002", name: "JINDAL Panther Roofing Sheet", brand: "JINDAL Panther", category: "Roofing Sheet", profile: "Trapezoidal", image: "/assets/products/jindal-panther.jpg", thicknessOptions: ["0.50 mm"], colors: ["Royal Blue", "Tile Red", "Off-White", "Mint Green"], ratePerUnit: 0, unit: "kg", sheetSize: "3 feet 6 inch to 15 feet", sheetWeight: "15.6 kg to 16 kg", description: "JINDAL Panther high-strength roofing sheet. Fixed size 3'6\" to 15 ft, weight 15.6-16 kg, 0.50mm only.", stockStatus: "In Stock" },
+  { id: "PRD-003", name: "JINDAL Sabrang Roofing Sheet", brand: "JINDAL Sabrang", category: "Roofing Sheet", profile: "Trapezoidal", image: "/assets/products/jindal-sabrang.jpg", thicknessOptions: ["0.50 mm"], colors: ["Royal Blue", "Tile Red", "Off-White", "Mint Green", "Bare Galvalume"], ratePerUnit: 0, unit: "kg", sheetSize: "3 feet 6 inch to 15 feet", sheetWeight: "15.6 kg to 16 kg", description: "JINDAL Sabrang color-coated roofing sheet. Fixed size 3'6\" to 15 ft, weight 15.6-16 kg, 0.50mm only.", stockStatus: "In Stock" },
+  { id: "PRD-004", name: "TATA PRISMA Roofing Sheet", brand: "TATA PRISMA", category: "Roofing Sheet", profile: "Trapezoidal", image: "/assets/products/tata-prisma.jpg", thicknessOptions: ["0.50 mm"], colors: ["Royal Blue", "Tile Red", "Off-White", "Mint Green"], ratePerUnit: 0, unit: "kg", sheetSize: "3 feet 6 inch to 15 feet", sheetWeight: "15.6 kg to 16 kg", description: "TATA PRISMA premium roofing sheet with superior corrosion protection. Fixed size 3'6\" to 15 ft, weight 15.6-16 kg.", stockStatus: "In Stock" },
+  { id: "PRD-005", name: "TATA BLUSCOPE Roofing Sheet", brand: "TATA BLUSCOPE", category: "Roofing Sheet", profile: "Trapezoidal", image: "/assets/products/tata-bluscope.jpg", thicknessOptions: ["0.50 mm"], colors: ["Royal Blue", "Tile Red", "Off-White", "Galvalume Silver"], ratePerUnit: 0, unit: "kg", sheetSize: "3 feet 6 inch to 15 feet", sheetWeight: "15.6 kg to 16 kg", description: "TATA BLUSCOPE high-quality roofing sheet. Fixed size 3'6\" to 15 ft, weight 15.6-16 kg, 0.50mm only.", stockStatus: "In Stock" },
+  { id: "PRD-006", name: "MS Pipe", brand: "Standard", category: "Pipe", profile: "Round/Square", image: "/assets/products/ms-pipe.jpg", thicknessOptions: [], colors: [], ratePerUnit: 0, unit: "kg", description: "MS Pipe (Mild Steel Pipe) for structural and fabrication use. Available in various sizes and thicknesses.", stockStatus: "In Stock" },
+  { id: "PRD-007", name: "MS Angle", brand: "Standard", category: "Pipe", profile: "L-Angle", image: "/assets/products/ms-angle.jpg", thicknessOptions: [], colors: [], ratePerUnit: 0, unit: "kg", description: "MS Angle (Mild Steel Angle) for construction frameworks, gates, shed trusses, and fabrication work.", stockStatus: "In Stock" },
+  { id: "PRD-008", name: "MS Channels", brand: "Standard", category: "Pipe", profile: "C-Channel", image: "/assets/products/ms-channels.jpg", thicknessOptions: [], colors: [], ratePerUnit: 0, unit: "kg", description: "MS Channels (C-Channel / U-Channel) for structural support, purlins, and industrial shed construction.", stockStatus: "In Stock" },
+  { id: "PRD-009", name: "Mangalam Welding Rod", brand: "Mangalam", category: "Welding Rod", profile: "Rod", image: "/assets/products/mangalam-welding-rod.jpg", thicknessOptions: [], colors: [], ratePerUnit: 0, unit: "kg", description: "Mangalam Welding Rod for all types of welding and heavy metal fabrication work. Premium quality electrodes.", stockStatus: "In Stock" },
+  { id: "PRD-010", name: "Chain Link Jali", brand: "Standard", category: "Jali / Mesh", profile: "Chain Link", image: "/assets/products/chain-link-jali.jpg", thicknessOptions: [], colors: ["GI Silver"], ratePerUnit: 0, unit: "kg", description: "Chain Link Jali (fencing mesh) for compound walls, agricultural farm fencing, and boundary security.", stockStatus: "In Stock" },
+  { id: "PRD-011", name: "Weld Mesh Jali", brand: "Standard", category: "Jali / Mesh", profile: "Weld Mesh", image: "/assets/products/weld-mesh-jali.jpg", thicknessOptions: [], colors: ["GI Silver"], ratePerUnit: 0, unit: "kg", description: "Weld Mesh Jali for windows, grills, security screens, cages, and construction reinforcement.", stockStatus: "In Stock" },
+  { id: "PRD-012", name: "Screw (Self Drilling / Roofing)", brand: "Standard", category: "Fastener", profile: "Screw", image: "/assets/products/roofing-screws.jpg", thicknessOptions: [], colors: [], ratePerUnit: 0, unit: "box", description: "Self-drilling roofing screws with EPDM rubber washer for leak-proof sheet installation. Available in all sizes.", stockStatus: "In Stock" },
+  { id: "PRD-013", name: "Cutting Wheel", brand: "Standard", category: "Accessories", profile: "Disc", image: "/assets/products/cutting-wheel.jpg", thicknessOptions: [], colors: [], ratePerUnit: 0, unit: "piece", description: "High-speed abrasive cutting wheel disc for angle grinder. For cutting steel sheets, pipes, and fabrication bars.", stockStatus: "In Stock" },
+  { id: "PRD-014", name: "All Types Fabrication Items", brand: "Standard", category: "Fabrication", profile: "Various", image: "/assets/products/fabrication-items.jpg", thicknessOptions: [], colors: [], ratePerUnit: 0, unit: "kg", description: "All types of fabrication items including C-Purlin, Z-Purlin, flat bars, clamps, brackets, and custom steel work.", stockStatus: "In Stock" }
+];
+
+function renderProductCards(products) {
+  const grid = document.getElementById('productsGrid');
+  if (!grid || !products || products.length === 0) return;
+
+  grid.innerHTML = products.map(p => {
+    const rate = p.ratePerUnit || p.ratePerSqFt || 0;
+    const hasSheetSpecs = p.sheetSize || p.sheetWeight;
+    const hasThickness = p.thicknessOptions && p.thicknessOptions.length > 0;
+    const hasColors = p.colors && p.colors.length > 0;
+    const prodImg = p.image || '/assets/products/amns-sheet.jpg';
+
+    return `
+    <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition flex flex-col justify-between group">
+      <div class="h-44 sm:h-48 overflow-hidden bg-slate-900 relative border-b border-slate-100">
+        <img src="${prodImg}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='/assets/logo-gajanan-traders.jpg'">
+        <span class="absolute top-2.5 left-2.5 bg-slate-900/90 text-amber-400 text-[10px] font-black px-2.5 py-0.5 rounded shadow uppercase tracking-wide">${p.brand}</span>
+      </div>
+
+      <div class="p-5 flex-grow flex flex-col justify-between">
+        <div>
+          <div class="flex justify-between items-start mb-2">
+            <span class="bg-blue-50 text-blue-800 text-[11px] font-black px-2.5 py-1 rounded-md border border-blue-100 uppercase">${p.category || 'Steel'}</span>
+            <span class="bg-emerald-50 text-emerald-700 text-[11px] font-bold px-2 py-0.5 rounded-full border border-emerald-100">${p.stockStatus || 'In Stock'}</span>
+          </div>
+          
+          <h3 class="font-extrabold text-slate-900 text-base mb-2">${p.name}</h3>
+          <p class="text-xs text-slate-600 mb-3 leading-relaxed line-clamp-2">${p.description}</p>
+          
+          <div class="bg-slate-50 p-2.5 rounded-xl space-y-1 text-xs mb-4">
+            ${hasThickness ? `<div class="flex justify-between"><span class="text-slate-500">Thickness:</span> <span class="font-semibold text-slate-800">${p.thicknessOptions.join(', ')}</span></div>` : ''}
+            ${hasColors ? `<div class="flex justify-between"><span class="text-slate-500">Colors:</span> <span class="font-semibold text-slate-800">${p.colors.join(', ')}</span></div>` : ''}
+            ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Sheet Size:</span> <span class="font-semibold text-slate-800">${p.sheetSize || '-'}</span></div>` : ''}
+            ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Weight:</span> <span class="font-semibold text-slate-800">${p.sheetWeight || '-'}</span></div>` : ''}
+            <div class="flex justify-between"><span class="text-slate-500">Pricing Unit:</span> <span class="font-semibold text-slate-800">Per ${p.unit || 'kg'}</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline pt-3 border-t border-slate-100 mb-3">
+            <span class="text-xs text-slate-500">Rate:</span>
+            <span class="text-xl font-black text-slate-900">${rate > 0 ? '₹' + rate : 'Contact'} <span class="text-xs font-normal text-slate-500">/ ${p.unit || 'kg'}</span></span>
+          </div>
+
+          <a href="https://wa.me/919767228008?text=${encodeURIComponent(`Hi Gajanan Traders, I want to check stock and price for ${p.name}.`)}" target="_blank" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
+            <i class="fa-brands fa-whatsapp text-sm"></i> ${currentLang === 'mr' ? 'व्हॉट्सॲपवर दर मागवा' : 'WhatsApp Price Quote'}
+          </a>
+        </div>
+      </div>
+    </div>
+  `}).join('');
+}
+
 // Fetch and display product catalog
 async function loadPublicProducts() {
   const grid = document.getElementById('productsGrid');
   if (!grid) return;
 
+  // 1. Immediately render cached or fallback products so page is NEVER blank
+  let initialProducts = [];
   try {
-    let products = [];
-    try {
-      const res = await fetch('/api/products');
-      if (res.ok) {
-        products = await res.json();
-        if (products && products.length > 0) {
-          localStorage.setItem('gt_public_products', JSON.stringify(products));
-        }
-      }
-    } catch (e) {
-      console.warn('Network error loading products, checking local cache:', e);
-    }
-
-    if (!products || products.length === 0) {
-      const cached = localStorage.getItem('gt_public_products');
-      if (cached) {
-        try { products = JSON.parse(cached); } catch (err) {}
+    const cached = localStorage.getItem('gt_public_products');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        initialProducts = parsed;
       }
     }
+  } catch(e) {}
 
-    if (!products || products.length === 0) {
-      grid.innerHTML = `<p class="col-span-3 text-center text-slate-500 py-8">No products available at the moment.</p>`;
-      return;
+  if (initialProducts.length === 0) {
+    initialProducts = FALLBACK_PRODUCTS;
+  }
+  renderProductCards(initialProducts);
+
+  // 2. Fetch fresh products from server in background and re-render if updated
+  try {
+    const res = await fetch('/api/products');
+    if (res.ok) {
+      const liveProducts = await res.json();
+      if (Array.isArray(liveProducts) && liveProducts.length > 0) {
+        localStorage.setItem('gt_public_products', JSON.stringify(liveProducts));
+        renderProductCards(liveProducts);
+      }
     }
-
-    grid.innerHTML = products.map(p => {
-      const rate = p.ratePerUnit || p.ratePerSqFt || 0;
-      const hasSheetSpecs = p.sheetSize || p.sheetWeight;
-      const hasThickness = p.thicknessOptions && p.thicknessOptions.length > 0;
-      const hasColors = p.colors && p.colors.length > 0;
-      const prodImg = p.image || '/assets/products/amns-sheet.jpg';
-      
-      return `
-      <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition flex flex-col justify-between group">
-        <div class="h-44 sm:h-48 overflow-hidden bg-slate-900 relative border-b border-slate-100">
-          <img src="${prodImg}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='/assets/logo-gajanan-traders.jpg'">
-          <span class="absolute top-2.5 left-2.5 bg-slate-900/90 text-amber-400 text-[10px] font-black px-2.5 py-0.5 rounded shadow uppercase tracking-wide">${p.brand}</span>
-        </div>
-
-        <div class="p-5 flex-grow flex flex-col justify-between">
-          <div>
-            <div class="flex justify-between items-start mb-2">
-              <span class="bg-blue-50 text-blue-800 text-[11px] font-black px-2.5 py-1 rounded-md border border-blue-100 uppercase">${p.category || 'Steel'}</span>
-              <span class="bg-emerald-50 text-emerald-700 text-[11px] font-bold px-2 py-0.5 rounded-full border border-emerald-100">${p.stockStatus || 'In Stock'}</span>
-            </div>
-            
-            <h3 class="font-extrabold text-slate-900 text-base mb-2">${p.name}</h3>
-            <p class="text-xs text-slate-600 mb-3 leading-relaxed line-clamp-2">${p.description}</p>
-            
-            <div class="bg-slate-50 p-2.5 rounded-xl space-y-1 text-xs mb-4">
-              ${hasThickness ? `<div class="flex justify-between"><span class="text-slate-500">Thickness:</span> <span class="font-semibold text-slate-800">${p.thicknessOptions.join(', ')}</span></div>` : ''}
-              ${hasColors ? `<div class="flex justify-between"><span class="text-slate-500">Colors:</span> <span class="font-semibold text-slate-800">${p.colors.join(', ')}</span></div>` : ''}
-              ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Sheet Size:</span> <span class="font-semibold text-slate-800">${p.sheetSize || '-'}</span></div>` : ''}
-              ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Weight:</span> <span class="font-semibold text-slate-800">${p.sheetWeight || '-'}</span></div>` : ''}
-              <div class="flex justify-between"><span class="text-slate-500">Pricing Unit:</span> <span class="font-semibold text-slate-800">Per ${p.unit || 'kg'}</span></div>
-            </div>
-          </div>
-
-          <div>
-            <div class="flex justify-between items-baseline pt-3 border-t border-slate-100 mb-3">
-              <span class="text-xs text-slate-500">Rate:</span>
-              <span class="text-xl font-black text-slate-900">${rate > 0 ? '₹' + rate : 'Contact'} <span class="text-xs font-normal text-slate-500">/ ${p.unit || 'kg'}</span></span>
-            </div>
-
-            <a href="https://wa.me/919767228008?text=${encodeURIComponent(`Hi Gajanan Traders, I want to check stock and price for ${p.name}.`)}" target="_blank" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
-              <i class="fa-brands fa-whatsapp text-sm"></i> ${currentLang === 'mr' ? 'व्हॉट्सॲपवर दर मागवा' : 'WhatsApp Price Quote'}
-            </a>
-          </div>
-        </div>
-      </div>
-    `}).join('');
-
   } catch (err) {
-    console.error('Error loading products:', err);
+    console.warn('Network error fetching products, using cached/fallback:', err);
   }
 }
 
@@ -293,7 +317,7 @@ function setupCalculator() {
   calculate();
 
   if (whatsappBtn) {
-    whatsappBtn.addEventListener('click', () => {
+    whatsappBtn.addEventListener('click', async () => {
       const brand = brandSelect.value;
       const length = lengthInput.value;
       const qty = qtyInput.value;
