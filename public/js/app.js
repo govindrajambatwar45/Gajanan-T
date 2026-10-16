@@ -305,39 +305,44 @@ function setupCalculator() {
       const gstCost = parseFloat(document.getElementById('resGst').textContent.replace(/[^0-9.]/g, '')) || 0;
       const totalNum = parseFloat(grandTotal.replace(/[^0-9.]/g, '')) || 0;
 
-      // Automatically record quotation request on server so admin sees it in history
-      fetch('/api/enquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customerName: 'Customer (Calculator Quote)',
-          phone: 'Online Website User',
-          city: 'Naigaon Bz',
-          brandPreference: brand,
-          message: `Calculated Specs: ${qty} Sheets of ${length} Ft (${color}, ${thickness}) - Total Area: ${totalSqFt} - Est. Total: ${grandTotal}`
-        })
-      }).catch(err => console.warn('Could not auto-save calculator enquiry:', err));
-
-      fetch('/api/quotations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customerName: 'Website Calculator Quote',
-          customerPhone: 'Online Lead',
-          items: [{
-            brand,
-            description: `${brand} Roofing Sheet (${color}, ${thickness}) - ${qty} Pcs @ ${length} Ft`,
-            quantity: qty,
-            sqft: totalSqFt,
-            rate: parseFloat(brandSelect.options[brandSelect.selectedIndex]?.getAttribute('data-rate')) || 60,
-            amount: baseCost
-          }],
-          subtotal: baseCost,
-          totalGst: gstCost,
-          grandTotal: totalNum,
-          status: 'Sent'
-        })
-      }).catch(err => console.warn('Could not auto-save quotation:', err));
+      // Automatically record quotation request on server so admin sees it in history for lifetime
+      try {
+        await Promise.all([
+          fetch('/api/enquiries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              customerName: 'Customer (Calculator Quote)',
+              phone: 'Online Website User',
+              city: 'Naigaon Bz',
+              brandPreference: brand,
+              message: `Calculated Specs: ${qty} Sheets of ${length} Ft (${color}, ${thickness}) - Total Area: ${totalSqFt} - Est. Total: ${grandTotal}`
+            })
+          }),
+          fetch('/api/quotations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              customerName: 'Website Calculator Quote',
+              customerPhone: 'Online Lead',
+              items: [{
+                brand,
+                description: `${brand} Roofing Sheet (${color}, ${thickness}) - ${qty} Pcs @ ${length} Ft`,
+                quantity: qty,
+                sqft: totalSqFt,
+                rate: parseFloat(brandSelect.options[brandSelect.selectedIndex]?.getAttribute('data-rate')) || 60,
+                amount: baseCost
+              }],
+              subtotal: baseCost,
+              totalGst: gstCost,
+              grandTotal: totalNum,
+              status: 'Sent'
+            })
+          })
+        ]);
+      } catch (err) {
+        console.warn('Could not auto-save calculator enquiry:', err);
+      }
 
       const msg = `Hello Gajanan Traders (Naigaon), I calculated my roofing requirement:
 - Brand: ${brand}
@@ -358,25 +363,29 @@ function setupHeroForm() {
   const form = document.getElementById('quickHeroForm');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const brand = document.getElementById('heroBrand').value;
     const color = document.getElementById('heroColor').value;
     const thickness = document.getElementById('heroThickness').value;
     const phone = document.getElementById('heroPhone').value;
 
-    // Automatically record inquiry on server for admin history
-    fetch('/api/enquiries', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        customerName: 'Quick Inquiry Customer',
-        phone: phone,
-        city: 'Naigaon Bz',
-        brandPreference: brand,
-        message: `Quick Price Request: Brand ${brand}, Color ${color}, Thickness ${thickness}`
-      })
-    }).catch(err => console.warn('Could not auto-save hero enquiry:', err));
+    // Automatically record inquiry on server for admin history for lifetime
+    try {
+      await fetch('/api/enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: 'Quick Inquiry Customer',
+          phone: phone,
+          city: 'Naigaon Bz',
+          brandPreference: brand,
+          message: `Quick Price Request: Brand ${brand}, Color ${color}, Thickness ${thickness}`
+        })
+      });
+    } catch (err) {
+      console.warn('Could not auto-save hero enquiry:', err);
+    }
 
     const msg = `Hi Gajanan Traders, my phone is ${phone}. I need a price quote for:
 - Brand: ${brand}
