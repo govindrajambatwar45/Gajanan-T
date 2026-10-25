@@ -430,6 +430,13 @@ function setupPublicEnquiryForm() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const submitBtn = document.getElementById('enqSubmitBtn') || form.querySelector('button[type="submit"]');
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + (currentLang === 'mr' ? 'ईमेल पाठवत आहे...' : 'Sending to Email...');
+    }
+
     const payload = {
       customerName: document.getElementById('enqName').value.trim(),
       phone: document.getElementById('enqPhone').value.trim(),
@@ -439,21 +446,48 @@ function setupPublicEnquiryForm() {
     };
 
     try {
-      const res = await fetch('/api/enquiries', {
+      // 1. Send email directly to gajanantraders93@gmail.com via FormSubmit
+      const emailPromise = fetch('https://formsubmit.co/ajax/gajanantraders93@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `New Online Order Enquiry: ${payload.customerName} (${payload.phone})`,
+          'Customer Full Name': payload.customerName,
+          'Mobile / WhatsApp': payload.phone,
+          'City / Village': payload.city || 'Naigaon Bz',
+          'Brand Preference': payload.brandPreference,
+          'Requirement Details': payload.message || 'N/A',
+          _captcha: 'false',
+          _template: 'table'
+        })
+      }).catch(err => console.warn('Email dispatch warning:', err));
+
+      // 2. Save into ERP Admin Panel backend
+      const dbPromise = fetch('/api/enquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      });
+      }).catch(err => console.warn('Database save warning:', err));
 
-      if (res.ok) {
-        alert(currentLang === 'mr' ? 'धन्यवाद! तुमची ऑर्डर चौकशी गजानन ट्रेडर्स कडे प्राप्त झाली आहे. आमचे मॅनेजर तुमच्याशी संपर्क साधतील.' : 'Thank you! Your requirement has been submitted to Gajanan Traders. Our manager will contact you shortly.');
-        form.reset();
-      } else {
-        alert(currentLang === 'mr' ? 'चौकशी पाठवता आली नाही. कृपया थेट +91 9767228008 वर कॉल करा.' : 'Failed to submit enquiry. Please call us directly at +91 9767228008.');
-      }
+      await Promise.allSettled([emailPromise, dbPromise]);
+
+      alert(currentLang === 'mr' 
+        ? 'धन्यवाद! तुमची ऑर्डर चौकशी थेट gajanantraders93@gmail.com वर पाठवली गेली आहे. आमची टीम लवकरच आपल्याशी संपर्क साधेल.' 
+        : 'Thank you! Your requirement has been sent directly to gajanantraders93@gmail.com and recorded. Our sales manager will contact you promptly.');
+      form.reset();
     } catch (err) {
       console.error(err);
-      alert('Network error. Please try again or WhatsApp +91 9767228008.');
+      alert(currentLang === 'mr'
+        ? 'कृपया थेट +91 9767228008 किंवा gajanantraders93@gmail.com वर संपर्क साधा.'
+        : 'Network error. Please call/WhatsApp +91 9767228008 or email gajanantraders93@gmail.com.');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+      }
     }
   });
 }
