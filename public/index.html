@@ -599,30 +599,36 @@
   <section id="enquiry" class="py-16 px-4">
     <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-3xl shadow-lg border border-slate-200">
       <div class="text-center max-w-2xl mx-auto mb-8">
-        <span class="bg-emerald-100 text-emerald-800 text-xs font-black uppercase px-3 py-1 rounded-full">Direct Inquiry</span>
+        <span class="bg-blue-100 text-blue-900 text-xs font-black uppercase px-3 py-1 rounded-full inline-flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-envelope text-blue-700"></i> Delivered to: gajanantraders93@gmail.com
+        </span>
         <h2 id="txtEnqTitle" class="text-3xl font-extrabold text-slate-900 mt-2">Submit Online Order Enquiry</h2>
-        <p class="text-slate-600 text-sm mt-1">Our sales manager will call you back with official quotation & delivery details.</p>
+        <p class="text-slate-600 text-sm mt-1">Your inquiry is sent directly to <strong>gajanantraders93@gmail.com</strong>. Our sales manager will contact you promptly with official quotation & delivery details.</p>
       </div>
 
-      <form id="publicEnquiryForm" class="grid sm:grid-cols-2 gap-4">
+      <form id="publicEnquiryForm" action="https://formsubmit.co/gajanantraders93@gmail.com" method="POST" class="grid sm:grid-cols-2 gap-4">
+        <input type="hidden" name="_subject" value="New Website Order Enquiry - Gajanan Traders">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
-          <input type="text" id="enqName" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="e.g. Ramesh Patil" required>
+          <input type="text" id="enqName" name="Full Name" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="e.g. Ramesh Patil" required>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Mobile / WhatsApp Number *</label>
-          <input type="tel" id="enqPhone" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="+91 9767228008" required>
+          <input type="tel" id="enqPhone" name="Mobile / WhatsApp" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="+91 9767228008" required>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Your City / Village Location</label>
-          <input type="text" id="enqCity" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="e.g. Naigaon Bz, Nanded" value="Naigaon Bz">
+          <input type="text" id="enqCity" name="City / Village" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="e.g. Naigaon Bz, Nanded" value="Naigaon Bz">
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Preferred Brand</label>
-          <select id="enqBrand" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800">
+          <select id="enqBrand" name="Preferred Brand" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800">
             <option value="TATA Shaktee">TATA Shaktee (Authorised)</option>
             <option value="AM/NS">AM/NS</option>
             <option value="JINDAL Panther">JINDAL Panther</option>
@@ -638,13 +644,16 @@
 
         <div class="sm:col-span-2">
           <label class="block text-xs font-bold text-slate-700 mb-1">Requirement Details (Quantity, Sheet Length, Color, Site Address)</label>
-          <textarea id="enqMessage" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="Mention sheet length, number of pieces, or specific color matching requirement..."></textarea>
+          <textarea id="enqMessage" name="Requirement Details" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="Mention sheet length, number of pieces, or specific color matching requirement..."></textarea>
         </div>
 
-        <div class="sm:col-span-2 text-center pt-2">
-          <button type="submit" class="bg-blue-800 hover:bg-blue-900 text-white font-extrabold px-8 py-3.5 rounded-xl text-base shadow-lg transition inline-flex items-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Submit Requirement
+        <div class="sm:col-span-2 flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
+          <button type="submit" id="enqSubmitBtn" class="w-full sm:w-auto bg-blue-800 hover:bg-blue-900 text-white font-extrabold px-8 py-3.5 rounded-xl text-base shadow-lg transition inline-flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Submit & Send to Email
           </button>
+          <a href="https://docs.google.com/forms" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold px-6 py-3.5 rounded-xl text-sm transition inline-flex items-center justify-center gap-2 shadow-sm">
+            <i class="fa-brands fa-google text-red-500"></i> Open Google Form
+          </a>
         </div>
       </form>
     </div>
