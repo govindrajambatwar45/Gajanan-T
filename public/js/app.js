@@ -1,80 +1,211 @@
-// Public Customer Storefront Logic, Marathi Translation & Theme Switcher for Gajanan Traders
+// Public Customer Storefront Logic, Bilingual (English / Marathi) Translation & Theme Switcher for Gajanan Traders
 
 let currentLang = localStorage.getItem('gt_lang') || 'en';
 let currentTheme = localStorage.getItem('gt_theme') || 'theme-blue';
+let cachedProductsList = [];
 
 const i18n = {
   en: {
+    topAnnounceTitle: "Authorised Dealer:",
+    topAnnounceText: "TATA Shaktee | MS Pipe | MS Angle | Mangalam Welding Rod | All Types Fabrication Items",
+    themeLabel: "Theme:",
+    topAdmin: "Admin Login",
     brandSub: "Authorised Dealer of Tata Shaktee & All Types Fabrication Items",
     navProducts: "Products",
+    navAboutShop: "About Shop",
     navOwner: "About Owner",
     navMfg: "Custom Manufacturing",
-    navCalc: "Sheet Calculator",
-    navEst: "Get Estimate",
     navLoc: "Contact & Location",
     waBtn: "WhatsApp",
     callBtn: "Call Shop",
-    heroBadge: "Authorised Dealer & Fabrication Items",
-    heroTitle: "Roofing Sheets & Steel Items",
-    heroSubtitle: "TATA Shaktee Authorised Dealer",
-    heroDesc: "Authorised dealer for TATA Shaktee. Roofing Sheets (AM/NS, JINDAL Panther, JINDAL Sabrang, TATA PRISMA, TATA BLUSCOPE), MS Pipe, MS Angle, MS Channels, Mangalam Welding Rod, Chain Link Jali, Weld Mesh Jali, Screws, Cutting Wheels & All Types Fabrication Items. Naigaon Bz, Nanded.",
-    heroCalcBtn: "Calculate Sheet Requirement",
+    heroBadge: "Direct Manufacturer & Authorized Distributorship",
+    heroTitle: "Premium Roofing Sheets",
+    heroSubtitle: "Custom Colors & Exact Lengths",
+    heroDesc: "Authorised dealer for TATA Shaktee. Roofing Sheets (AM/NS, JINDAL Panther, JINDAL Sabrang, TATA PRISMA, TATA BLUSCOPE), MS Pipe, MS Angle, MS Channels, Mangalam Welding Rod, Chain Link Jali, Weld Mesh Jali, Screws, Cutting Wheels & All Types Fabrication Items. Visit our shop in Naigaon Bz, Nanded.",
     heroWaBtn: "Instant WhatsApp Quote",
     heroLocBtn: "Open Location",
+    heroStat1Num: "100%",
+    heroStat1Label: "Genuine Authorized Steel",
+    heroStat2Num: "Custom",
+    heroStat2Label: "Color & Length Sizing",
+    heroStat3Num: "431709",
+    heroStat3Label: "Fast Naigaon Delivery",
     quickInqTitle: "Quick Material Inquiry",
+    quickInqBadge: "Available Now",
     lblBrand: "Select Brand / Item",
     lblColor: "Color Required",
     lblThickness: "Thickness (mm)",
     lblMobile: "Your Mobile Number",
     sendWaReq: "Send WhatsApp Price Request",
+    authBadgesHeader: "Authorised Distributorship & Manufacturing",
+    authSub1: "Authorised Dealer",
+    authSub2: "Panther & Sabrang Sheets",
+    authSub3: "Welding Rod",
+    authSub4: "MS Pipe, Angle, Jali & More",
+    productsBadge: "Our Product Range",
     productsTitle: "Our Complete Product Range",
     productsDesc: "Roofing Sheets, MS Pipe, MS Angle, Welding Rod, Jali, Screws & All Types Fabrication Items available at our Naigaon shop.",
+    ownerCardBadge: "Family-Owned Business",
+    ownerCardFounder: "Mr. Prakash Medewar (Founder)",
+    ownerCardOwner: "& Mr. Pankaj Medewar (Owner)",
+    ownerCardSub: "Gajanan Traders • Over 35 Years of Trust",
+    ownerCardBtn: "View Founder & Owner Profiles",
     meetOwnerBadge: "Meet The Owner",
-    ownerHeadline: "Leadership Dedicated to Quality Steel & Customer Trust",
-    ownerWelcome: '"Welcome to Gajanan Traders! I am Mr. Pankaj Medewar, proprietor of Gajanan Traders in Naigaon Bz."',
+    ownerHeadline: "Leadership Dedicated to <br><span class=\"text-blue-800\">Quality Steel & Customer Trust</span>",
+    ownerWelcome: '"Welcome to Gajanan Traders! I am <strong class="text-slate-900">Mr. Pankaj Medewar</strong>, proprietor of Gajanan Traders in Naigaon Bz."',
     ownerBio1: "For years, our shop near Uddhav Nagri has served contractors, farmers, residential homeowners, and commercial builders across Naigaon, Nanded, Umri, Degloor, and Biloli. As authorized dealers for TATA Shaktee, we take pride in delivering 100% genuine, high-strength roofing sheets along with MS Pipe, MS Angle, Welding Rod and all types of fabrication items.",
     ownerBio2: "Our shop provides a complete range of steel and construction materials including roofing sheets from multiple brands, MS Pipe, MS Angle, MS Channels, Mangalam Welding Rods, Chain Link Jali, Weld Mesh Jali, Screws, Cutting Wheels and all types of fabrication items.",
-    calcTitle: "Roofing Sheet Requirement Calculator",
-    calcSub: "Select your roof specs to get instant total square footage and estimate.",
-    enqTitle: "Submit Online Order Enquiry",
+    ownerFeat1: "Authorised TATA Shaktee Dealer",
+    ownerFeat2: "Custom Length Cut & Sizing",
+    ownerFeat3: "Fair & Transparent Rates",
+    ownerFeat4: "Direct Site Delivery in Nanded District",
+    ownerWaBtn: "Connect on WhatsApp",
+    ownerCallBtn: "Call +91 9767228008",
+    trustBadge: "35+ Years of Trust & Quality",
+    trustHeading: "TRUST UP TO 35 YEARS",
+    trustSub: "35 Years of Unbroken Trust • Gajanan Traders, Naigaon Bz",
+    trustDesc: "Founded and led by <strong>Mr. Prakash Medewar</strong> (Consulting Member) and managed with his son <strong>Mr. Pankaj Medewar</strong>, Gajanan Traders is a trusted family-owned business with over <strong>35 years of experience</strong> in Naigaon Bz, Nanded. With a strong commitment to trust, quality, and customer satisfaction, we continue our legacy of reliable service.",
+    trustShopBtn: "Explore Our Shop & Factory Photos",
+    trustWaBtn: "Connect with Us",
+    mfgBadge: "Factory Manufacturing",
+    mfgTitle: "Custom Color & Length Sheet Manufacturing",
+    mfgDesc: "Need a specific length to avoid wastage on your roof structure? Or matching color shade for architectural branding? At Gajanan Traders, our automated roll-forming machine manufactures precise lengths from 6 ft up to 30+ ft with customized color finishes.",
+    mfgBullet1: "Custom colors: Royal Blue, Tile Red, Mint Green, Off-White & dual shades.",
+    mfgBullet2: "Zero wastage: Custom length cut according to your shed purlin spacing.",
+    mfgBullet3: "Tile Profile & Crimp Curved bending options available for bungalows and verandas.",
+    mfgBullet4: "C-Purlin & Z-Purlins for complete steel structural frame.",
+    mfgBtn: "Inquire Custom Color Manufacturing",
+    colorTitle: "Popular Color Shade Options",
+    colorRoyalBlue: "Royal Blue",
+    colorTileRed: "Tile / Brick Red",
+    colorMintGreen: "Mint Green",
+    colorOffWhite: "Off-White",
+    colorGalvalume: "Bare Galvalume",
+    colorTerracotta: "Terracotta",
+    locBadge: "Visit Our Shop",
     locTitle: "Gajanan Traders - Location",
-    locBtn: "Get Location (Gajanan Traders on Google Maps)"
+    locAddrLabel: "Shop Address:",
+    locAddrVal: "Near Uddhav Nagri, Nanded Road, Naigaon Bz, <br>Taluka Naigaon Kh, District Nanded, Maharashtra, PIN: 431709",
+    locPropLabel: "Proprietor:",
+    locPropVal: "Mr. Pankaj Medewar",
+    locPhoneLabel: "Contact Numbers:",
+    locWaLabel: "WhatsApp Business:",
+    locHoursLabel: "Business Hours:",
+    locHoursVal: "Monday - Saturday: 8:30 AM to 8:00 PM (Sunday: By Appointment)",
+    locBtn: "Get Location (Gajanan Traders on Google Maps)",
+    delivTitle: "Local Delivery Area",
+    delivSub: "We supply and deliver direct to construction sites across:",
+    delivArea1: "Naigaon Bz & Kh",
+    delivArea2: "Nanded City",
+    delivArea3: "Umri & Degloor",
+    delivArea4: "Biloli & Kandhar",
+    footerMain: "<strong>GAJANAN TRADERS</strong> — Owner: Mr. Pankaj Medewar | Authorised Dealer of Tata Shaktee, MS Pipe, MS Angle, Mangalam Welding Rod & All Types Fabrication Items",
+    footerAddr: "Near Uddhav Nagri, Nanded Road, Naigaon Bz, Tq Naigaon Kh, Dist Nanded 431709.",
+    footerAboutShop: "About Shop",
+    footerMaps: "Gajanan Traders Google Maps",
+    footerAdmin: "Admin Portal",
+    footerCopy: "© 2026 Gajanan Traders. All Rights Reserved."
   },
   mr: {
-    brandSub: "पत्रा उत्पादन व अधिकृत डीलर",
-    navProducts: "उत्पादने (Products)",
-    navOwner: "मालकांबद्दल (About Owner)",
+    topAnnounceTitle: "अधिकृत डीलर:",
+    topAnnounceText: "टाटा शक्ती | एमएस पाईप | एमएस अँगल | मंगलम वेल्डिंग रॉड | सर्व प्रकारचे फॅब्रिकेशन साहित्य",
+    themeLabel: "थीम:",
+    topAdmin: "ॲडमिन लॉगिन",
+    brandSub: "टाटा शक्ती व सर्व प्रकारच्या फॅब्रिकेशन साहित्याचे अधिकृत विक्रेते",
+    navProducts: "उत्पादने",
+    navAboutShop: "दुकानाविषयी माहिती",
+    navOwner: "मालकांबद्दल",
     navMfg: "कस्टम निर्मिती",
-    navCalc: "पत्रा कॅल्क्युलेटर",
-    navEst: "अंदाजपत्रक मिळवा",
-    navLoc: "पत्ता व संपर्क",
+    navLoc: "संपर्क व पत्ता",
     waBtn: "व्हॉट्सॲप",
     callBtn: "फोन करा",
-    heroBadge: "थेट पत्रा निर्मिती व अधिकृत डीलरशिप",
+    heroBadge: "थेट उत्पादन व अधिकृत वितरक",
     heroTitle: "उत्कृष्ट दर्जाचे रूफिंग पत्रे",
-    heroSubtitle: "तुमच्या पसंतीचा रंग व लागणारी अचूक लांबी",
-    heroDesc: "टाटा शक्ती (TATA Shaktee), जेएसडब्ल्यू प्रगती (JSW Pragati) आणि जिंदल स्टीलचे अधिकृत विक्रेते. नायगाव बझार, नांदेड येथे तुमच्या गरजेनुसार रंगाचे व लांबीचे पत्रे थेट कारखान्यातून तयार करून मिळतील.",
-    heroCalcBtn: "पत्र्याची मोजणी करा",
+    heroSubtitle: "पसंतीचा रंग व अचूक लांबी",
+    heroDesc: "टाटा शक्तीचे अधिकृत विक्रेते. रूफिंग पत्रे (AM/NS, जिंदल पँथर, जिंदल सबरंग, टाटा प्रिझ्मा, टाटा ब्लूस्कोप), एमएस पाईप, एमएस अँगल, एमएस चॅनेल, मंगलम वेल्डिंग रॉड, चेन लिंक जाळी, वेल्ड मेश जाळी, स्क्रू, कटिंग व्हील आणि सर्व प्रकारचे फॅब्रिकेशन साहित्य. आमच्या नायगाव बझार (नांदेड) दुकानास भेट द्या.",
     heroWaBtn: "व्हॉट्सॲपवर दर मागवा",
-    heroLocBtn: "गूगल मॅपवर पत्ता पाहा",
-    quickInqTitle: "त्वरित माहिती मागवा",
-    lblBrand: "कंपनी निवडा",
-    lblColor: "पसंतीचा रंग",
-    lblThickness: "जाडी (mm)",
+    heroLocBtn: "पत्ता पाहा (मॅप)",
+    heroStat1Num: "१००%",
+    heroStat1Label: "अस्सल अधिकृत स्टील",
+    heroStat2Num: "कस्टम",
+    heroStat2Label: "रंग व लांबीचे मापे",
+    heroStat3Num: "४३१७०९",
+    heroStat3Label: "नायगाव जलद डिलिव्हरी",
+    quickInqTitle: "त्वरित मटेरियल चौकशी",
+    quickInqBadge: "उपलब्ध आहे",
+    lblBrand: "ब्रँड / साहित्य निवडा",
+    lblColor: "आवश्यक रंग",
+    lblThickness: "जाडी (मिमी)",
     lblMobile: "तुमचा मोबाईल नंबर",
-    sendWaReq: "व्हॉट्सॲपवर दरपत्रक मिळवा",
-    productsTitle: "अधिकृत रूफिंग पत्रे व ॲक्सेसरीज",
-    productsDesc: "नायगाव दुकानात ready stock उपलब्ध तसेच ऑर्डरनुसार कटिंग करून मिळेल.",
-    meetOwnerBadge: "दुकानाच्या मालकांबद्दल",
-    ownerHeadline: "दर्जेदार पोलाद व ग्राहकांचा विश्वास",
-    ownerWelcome: '"गजानन ट्रेडर्समध्ये आपले सहर्ष स्वागत! मी श्री. पंकज मेदेवार, गजानन ट्रेडर्स नायगाव बझारचा प्रोप्रायटर."',
-    ownerBio1: "उद्धव नगरी जवळ, नांदेड रोड नायगाव बझार येथे आमचे दुकान असून नायगाव, नांदेड, उमरी, देगलूर, बिलोली व कंधार परिसरातील ग्राहक व कॉन्ट्रॅक्टर्ससाठी आम्ही टाटा शक्ती, JSW प्रगती आणि जिंदल स्टीलचे १००% अस्सल पत्रे पुरवतो.",
-    ownerBio2: "आमच्या कारखान्यात स्वयंचलित रोल फॉर्मिंग मशीनद्वारे तुमच्या शेडच्या मापानुसार लांबी व आवडीचा रंग (Royal Blue, Tile Red, Mint Green इ.) देऊन पत्रा तयार करून दिला जातो, ज्यामुळे वेस्टेज वाचून पैशांची बचत होते.",
-    calcTitle: "पत्रा आवश्यकतेचे कॅल्क्युलेटर",
-    calcSub: "तुमच्या छताचे माप टाकून त्वरित एकूण स्क्वेअर फूट आणि अंदाजे किंमत पाहा.",
-    enqTitle: "ऑनलाईन ऑर्डर चौकशी अर्ज",
+    sendWaReq: "व्हॉट्सॲपवर दर मागवा",
+    authBadgesHeader: "अधिकृत वितरक व फॅक्टरी निर्मिती",
+    authSub1: "अधिकृत डीलर",
+    authSub2: "पँथर व सबरंग पत्रे",
+    authSub3: "वेल्डिंग रॉड",
+    authSub4: "एमएस पाईप, अँगल, जाळी व इतर",
+    productsBadge: "आमची उत्पादने",
+    productsTitle: "सर्व उत्पादनांची यादी",
+    productsDesc: "रूफिंग पत्रे, एमएस पाईप, एमएस अँगल, वेल्डिंग रॉड, जाळी, स्क्रू आणि सर्व प्रकारचे फॅब्रिकेशन साहित्य आमच्या नायगाव दुकानात उपलब्ध.",
+    ownerCardBadge: "कौटुंबिक व्यवसाय",
+    ownerCardFounder: "श्री. प्रकाश मेदेवार (संस्थापक)",
+    ownerCardOwner: "आणि श्री. पंकज मेदेवार (मालक)",
+    ownerCardSub: "गजानन ट्रेडर्स • ३५ वर्षांहून अधिक काळ विश्वास",
+    ownerCardBtn: "संस्थापक व मालकांची माहिती पाहा",
+    meetOwnerBadge: "मालकांबद्दल माहिती",
+    ownerHeadline: "दर्जेदार स्टील आणि ग्राहकांच्या विश्वासास समर्पित नेतृत्व",
+    ownerWelcome: '"गजानन ट्रेडर्समध्ये आपले सहर्ष स्वागत! मी <strong class="text-slate-900">श्री. पंकज मेदेवार</strong>, गजानन ट्रेडर्स नायगाव बझारचा प्रोप्रायटर."',
+    ownerBio1: "उद्धव नगरी जवळ, नांदेड रोड नायगाव बझार येथे आमचे दुकान असून नायगाव, नांदेड, उमरी, देगलूर, बिलोली व कंधार परिसरातील शेतकरी, बांधकाम व्यावसायिक व नागरिकांसाठी आम्ही टाटा शक्तीचे अधिकृत पत्रे, एमएस पाईप, अँगल, मंगलम वेल्डिंग रॉड आणि सर्व प्रकारचे फॅब्रिकेशन साहित्य पुरवतो.",
+    ownerBio2: "आमच्याकडे रूफिंग पत्रे, एमएस पाईप, एमएस अँगल, एमएस चॅनेल, मंगलम वेल्डिंग रॉड, चेन लिंक जाळी, वेल्ड मेश जाळी, स्क्रू, कटिंग व्हील आणि सर्व प्रकारच्या फॅब्रिकेशन साहित्याचा भरपूर साठा योग्य दरात उपलब्ध आहे.",
+    ownerFeat1: "टाटा शक्तीचे अधिकृत डीलर",
+    ownerFeat2: "गरजेनुसार कटिंग व साइजिंग",
+    ownerFeat3: "रास्त व पारदर्शक दर",
+    ownerFeat4: "नांदेड जिल्ह्यात थेट साईटवर डिलिव्हरी",
+    ownerWaBtn: "व्हॉट्सॲपवर संपर्क करा",
+    ownerCallBtn: "कॉल करा: +91 9767228008",
+    trustBadge: "३५+ वर्षांचा विश्वास आणि गुणवत्ता",
+    trustHeading: "३५ वर्षांचा अतूट विश्वास",
+    trustSub: "३५ वर्षांचा अतूट विश्वास • गजानन ट्रेडर्स, नायगाव बझार",
+    trustDesc: "श्री. प्रकाश मेदेवार (सल्लागार संस्थापक) आणि त्यांचे सुपुत्र श्री. पंकज मेदेवार यांच्या नेतृत्वाखाली गजानन ट्रेडर्स हा नायगाव बझार (जि. नांदेड) येथील ३५ वर्षांहून अधिक काळ कार्यरत असलेला एक नामांकित व विश्वासू कौटुंबिक व्यवसाय आहे. दर्जेदार पोलाद आणि उत्कृष्ट सेवेच्या परंपरेसह आम्ही ग्राहकांच्या सेवेत सदैव तत्पर आहोत.",
+    trustShopBtn: "दुकान व फॅक्टरीचे फोटो पाहा",
+    trustWaBtn: "आमच्याशी संपर्क साधा",
+    mfgBadge: "फॅक्टरी मॅन्युफॅक्चरिंग",
+    mfgTitle: "पसंतीचा रंग व लांबीनुसार पत्रे तयार करून मिळतील",
+    mfgDesc: "छताच्या शेडनुसार अचूक लांबीचा पत्रा हवा आहे? गजानन ट्रेडर्समध्ये स्वयंचलित रोल फॉर्मिंग मशीनद्वारे ६ फुटांपासून ३०+ फुटांपर्यंत हव्या त्या लांबीचे आणि मनपसंत रंगाचे पत्रे तयार करून मिळतात.",
+    mfgBullet1: "विविध रंग: रॉयल ब्लू, टाईल रेड, मिंट ग्रीन, ऑफ-व्हाईट इत्यादी.",
+    mfgBullet2: "शून्य वेस्टेज: शेडच्या अंतरानुसार अचूक लांबीचे कटिंग.",
+    mfgBullet3: "टाईल प्रोफाईल आणि क्रिम्प कर्व्हड बेंडिंगची सुविधा उपलब्ध.",
+    mfgBullet4: "मजबूत शेडसाठी सी-पर्लिन व झेड-पर्लिन उपलब्ध.",
+    mfgBtn: "कस्टम कलर पत्र्यांची चौकशी करा",
+    colorTitle: "लोकप्रिय रंगांचे पर्याय",
+    colorRoyalBlue: "रॉयल ब्लू",
+    colorTileRed: "टाईल / विटकरी लाल",
+    colorMintGreen: "मिंट ग्रीन",
+    colorOffWhite: "ऑफ-व्हाईट",
+    colorGalvalume: "बेअर गॅल्व्हॅल्युम",
+    colorTerracotta: "टेराकोटा",
+    locBadge: "आमच्या दुकानाला भेट द्या",
     locTitle: "गजानन ट्रेडर्स - पत्ता व लोकेशन",
-    locBtn: "गूगल मॅपवर गजानन ट्रेडर्सचे लोकेशन पाहा"
+    locAddrLabel: "दुकानाचा पत्ता:",
+    locAddrVal: "उद्धव नगरी जवळ, नांदेड रोड, नायगाव बझार, <br>ता. नायगाव खै., जि. नांदेड, महाराष्ट्र, पिन: ४३१७०९",
+    locPropLabel: "प्रोप्रायटर:",
+    locPropVal: "श्री. पंकज मेदेवार",
+    locPhoneLabel: "संपर्क क्रमांक:",
+    locWaLabel: "व्हॉट्सॲप व्यवसाय:",
+    locHoursLabel: "कामाची वेळ:",
+    locHoursVal: "सोमवार - शनिवार: सकाळी ८:३० ते रात्री ८:०० (रविवार: अपॉइंटमेंटनुसार)",
+    locBtn: "गूगल मॅपवर गजानन ट्रेडर्सचे लोकेशन पाहा",
+    delivTitle: "स्थानिक डिलिव्हरी क्षेत्र",
+    delivSub: "आम्ही खालील सर्व भागात थेट बांधकाम साईटवर माल पोहोचवतो:",
+    delivArea1: "नायगाव बझार व खैरगाव",
+    delivArea2: "नांदेड शहर व परिसर",
+    delivArea3: "उमरी व देगलूर",
+    delivArea4: "बिलोली व कंधार",
+    footerMain: "<strong>गजानन ट्रेडर्स</strong> — मालक: श्री. पंकज मेदेवार | टाटा शक्ती, एमएस पाईप, एमएस अँगल, मंगलम वेल्डिंग रॉड आणि सर्व प्रकारच्या फॅब्रिकेशन साहित्याचे अधिकृत विक्रेते",
+    footerAddr: "उद्धव नगरी जवळ, नांदेड रोड, नायगाव बझार, ता. नायगाव खै., जि. नांदेड ४३१७०९.",
+    footerAboutShop: "दुकानाविषयी माहिती",
+    footerMaps: "गूगल मॅप्स लोकेशन",
+    footerAdmin: "ॲडमिन पोर्टल",
+    footerCopy: "© २०२६ गजानन ट्रेडर्स. सर्व हक्क सुरक्षित."
   }
 };
 
@@ -82,8 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(currentTheme);
   applyLanguage(currentLang);
   loadPublicProducts();
-  setupCalculator();
-  setupPublicEnquiryForm();
   setupHeroForm();
 });
 
@@ -92,18 +221,24 @@ function switchLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('gt_lang', lang);
   applyLanguage(lang);
+  if (cachedProductsList && cachedProductsList.length > 0) {
+    renderProductCards(cachedProductsList);
+  }
 }
 
 function applyLanguage(lang) {
   const dict = i18n[lang] || i18n.en;
 
   const mapping = {
+    'txtTopAnnounceTitle': dict.topAnnounceTitle,
+    'txtTopAnnounceText': dict.topAnnounceText,
+    'txtThemeLabel': dict.themeLabel,
+    'txtTopAdmin': dict.topAdmin,
     'txtBrandSub': dict.brandSub,
     'txtNavProducts': dict.navProducts,
+    'txtNavAboutShop': dict.navAboutShop,
     'txtNavOwner': dict.navOwner,
     'txtNavMfg': dict.navMfg,
-    'txtNavCalc': dict.navCalc,
-    'txtNavEst': dict.navEst,
     'txtNavLoc': dict.navLoc,
     'txtWaBtn': dict.waBtn,
     'txtCallBtn': dict.callBtn,
@@ -111,38 +246,106 @@ function applyLanguage(lang) {
     'txtHeroTitle': dict.heroTitle,
     'txtHeroSubtitle': dict.heroSubtitle,
     'txtHeroDesc': dict.heroDesc,
-    'txtHeroCalcBtn': dict.heroCalcBtn,
     'txtHeroWaBtn': dict.heroWaBtn,
     'txtHeroLocBtn': dict.heroLocBtn,
+    'txtHeroStat1Num': dict.heroStat1Num,
+    'txtHeroStat1Label': dict.heroStat1Label,
+    'txtHeroStat2Num': dict.heroStat2Num,
+    'txtHeroStat2Label': dict.heroStat2Label,
+    'txtHeroStat3Num': dict.heroStat3Num,
+    'txtHeroStat3Label': dict.heroStat3Label,
     'txtQuickInqTitle': dict.quickInqTitle,
+    'txtQuickInqBadge': dict.quickInqBadge,
     'lblBrand': dict.lblBrand,
     'lblColor': dict.lblColor,
     'lblThickness': dict.lblThickness,
     'lblMobile': dict.lblMobile,
     'txtSendWaReq': dict.sendWaReq,
+    'txtAuthBadgesHeader': dict.authBadgesHeader,
+    'txtAuthSub1': dict.authSub1,
+    'txtAuthSub2': dict.authSub2,
+    'txtAuthSub3': dict.authSub3,
+    'txtAuthSub4': dict.authSub4,
+    'txtProductsBadge': dict.productsBadge,
     'txtProductsTitle': dict.productsTitle,
     'txtProductsDesc': dict.productsDesc,
+    'txtOwnerCardBadge': dict.ownerCardBadge,
+    'txtOwnerCardFounder': dict.ownerCardFounder,
+    'txtOwnerCardOwner': dict.ownerCardOwner,
+    'txtOwnerCardSub': dict.ownerCardSub,
+    'txtOwnerCardBtn': dict.ownerCardBtn,
     'txtMeetOwnerBadge': dict.meetOwnerBadge,
     'txtOwnerHeadline': dict.ownerHeadline,
     'txtOwnerWelcome': dict.ownerWelcome,
     'txtOwnerBio1': dict.ownerBio1,
     'txtOwnerBio2': dict.ownerBio2,
-    'txtCalcTitle': dict.calcTitle,
-    'txtCalcSub': dict.calcSub,
-    'txtEnqTitle': dict.enqTitle,
+    'txtOwnerFeat1': dict.ownerFeat1,
+    'txtOwnerFeat2': dict.ownerFeat2,
+    'txtOwnerFeat3': dict.ownerFeat3,
+    'txtOwnerFeat4': dict.ownerFeat4,
+    'txtOwnerWaBtn': dict.ownerWaBtn,
+    'txtOwnerCallBtn': dict.ownerCallBtn,
+    'txtTrustBadge': dict.trustBadge,
+    'txtTrustHeading': dict.trustHeading,
+    'txtTrustSub': dict.trustSub,
+    'txtTrustDesc': dict.trustDesc,
+    'txtTrustShopBtn': dict.trustShopBtn,
+    'txtTrustWaBtn': dict.trustWaBtn,
+    'mfgBadge': dict.mfgBadge,
+    'txtMfgTitle': dict.mfgTitle,
+    'txtMfgDesc': dict.mfgDesc,
+    'txtMfgBullet1': dict.mfgBullet1,
+    'txtMfgBullet2': dict.mfgBullet2,
+    'txtMfgBullet3': dict.mfgBullet3,
+    'txtMfgBullet4': dict.mfgBullet4,
+    'txtMfgBtn': dict.mfgBtn,
+    'txtColorTitle': dict.colorTitle,
+    'txtColorRoyalBlue': dict.colorRoyalBlue,
+    'txtColorTileRed': dict.colorTileRed,
+    'txtColorMintGreen': dict.colorMintGreen,
+    'txtColorOffWhite': dict.colorOffWhite,
+    'txtColorGalvalume': dict.colorGalvalume,
+    'txtColorTerracotta': dict.colorTerracotta,
+    'txtLocBadge': dict.locBadge,
     'txtLocTitle': dict.locTitle,
-    'txtLocBtn': dict.locBtn
+    'txtLocAddrLabel': dict.locAddrLabel,
+    'txtLocAddrVal': dict.locAddrVal,
+    'txtLocPropLabel': dict.locPropLabel,
+    'txtLocPropVal': dict.locPropVal,
+    'txtLocPhoneLabel': dict.locPhoneLabel,
+    'txtLocWaLabel': dict.locWaLabel,
+    'txtLocHoursLabel': dict.locHoursLabel,
+    'txtLocHoursVal': dict.locHoursVal,
+    'txtLocBtn': dict.locBtn,
+    'txtDelivTitle': dict.delivTitle,
+    'txtDelivSub': dict.delivSub,
+    'txtDelivArea1': dict.delivArea1,
+    'txtDelivArea2': dict.delivArea2,
+    'txtDelivArea3': dict.delivArea3,
+    'txtDelivArea4': dict.delivArea4,
+    'txtFooterMain': dict.footerMain,
+    'txtFooterAddr': dict.footerAddr,
+    'txtFooterAboutShop': dict.footerAboutShop,
+    'txtFooterMaps': dict.footerMaps,
+    'txtFooterAdmin': dict.footerAdmin,
+    'txtFooterCopy': dict.footerCopy
   };
 
   for (const [id, text] of Object.entries(mapping)) {
     const el = document.getElementById(id);
     if (el) {
-      if (id === 'txtOwnerWelcome') {
+      if (text.includes('<') && text.includes('>')) {
         el.innerHTML = text;
       } else {
         el.textContent = text;
       }
     }
+  }
+
+  // Input placeholder
+  const phoneInput = document.getElementById('heroPhone');
+  if (phoneInput) {
+    phoneInput.placeholder = lang === 'mr' ? '१० अंकी मोबाईल नंबर टाका' : 'Enter 10 digit mobile number';
   }
 
   // Update button active state
@@ -193,12 +396,37 @@ function renderProductCards(products) {
   const grid = document.getElementById('productsGrid');
   if (!grid || !products || products.length === 0) return;
 
+  const isMr = currentLang === 'mr';
+
   grid.innerHTML = products.map(p => {
     const rate = p.ratePerUnit || p.ratePerSqFt || 0;
     const hasSheetSpecs = p.sheetSize || p.sheetWeight;
     const hasThickness = p.thicknessOptions && p.thicknessOptions.length > 0;
     const hasColors = p.colors && p.colors.length > 0;
     const prodImg = p.image || '/assets/products/amns-sheet.jpg';
+
+    // Unit formatting
+    let unitDisplay = p.unit || 'kg';
+    if (isMr) {
+      if (unitDisplay === 'kg') unitDisplay = 'किलो';
+      else if (unitDisplay === 'piece') unitDisplay = 'नग';
+      else if (unitDisplay === 'box') unitDisplay = 'बॉक्स';
+      else if (unitDisplay === 'meter') unitDisplay = 'मीटर';
+    }
+
+    const stockText = isMr ? 'स्टॉकमध्ये उपलब्ध' : (p.stockStatus || 'In Stock');
+    const thicknessLabel = isMr ? 'जाडी:' : 'Thickness:';
+    const colorsLabel = isMr ? 'रंग:' : 'Colors:';
+    const sizeLabel = isMr ? 'पत्र्याची लांबी:' : 'Sheet Size:';
+    const weightLabel = isMr ? 'वजन:' : 'Weight:';
+    const unitLabel = isMr ? 'दर एकक:' : 'Pricing Unit:';
+    const rateLabel = isMr ? 'दर:' : 'Rate:';
+    const contactText = isMr ? 'दर जाणून घ्या' : 'Contact';
+    const waBtnText = isMr ? 'व्हॉट्सॲपवर दर मागवा' : 'WhatsApp Price Quote';
+
+    const waMsg = isMr
+      ? `नमस्कार गजानन ट्रेडर्स, मला ${p.name} चे दर आणि उपलब्ध साठा जाणून घ्यायचा आहे.`
+      : `Hi Gajanan Traders, I want to check stock and price for ${p.name}.`;
 
     return `
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition flex flex-col justify-between group">
@@ -211,29 +439,29 @@ function renderProductCards(products) {
         <div>
           <div class="flex justify-between items-start mb-2">
             <span class="bg-blue-50 text-blue-800 text-[11px] font-black px-2.5 py-1 rounded-md border border-blue-100 uppercase">${p.category || 'Steel'}</span>
-            <span class="bg-emerald-50 text-emerald-700 text-[11px] font-bold px-2 py-0.5 rounded-full border border-emerald-100">${p.stockStatus || 'In Stock'}</span>
+            <span class="bg-emerald-50 text-emerald-700 text-[11px] font-bold px-2 py-0.5 rounded-full border border-emerald-100">${stockText}</span>
           </div>
           
           <h3 class="font-extrabold text-slate-900 text-base mb-2">${p.name}</h3>
           <p class="text-xs text-slate-600 mb-3 leading-relaxed line-clamp-2">${p.description}</p>
           
           <div class="bg-slate-50 p-2.5 rounded-xl space-y-1 text-xs mb-4">
-            ${hasThickness ? `<div class="flex justify-between"><span class="text-slate-500">Thickness:</span> <span class="font-semibold text-slate-800">${p.thicknessOptions.join(', ')}</span></div>` : ''}
-            ${hasColors ? `<div class="flex justify-between"><span class="text-slate-500">Colors:</span> <span class="font-semibold text-slate-800">${p.colors.join(', ')}</span></div>` : ''}
-            ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Sheet Size:</span> <span class="font-semibold text-slate-800">${p.sheetSize || '-'}</span></div>` : ''}
-            ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">Weight:</span> <span class="font-semibold text-slate-800">${p.sheetWeight || '-'}</span></div>` : ''}
-            <div class="flex justify-between"><span class="text-slate-500">Pricing Unit:</span> <span class="font-semibold text-slate-800">Per ${p.unit || 'kg'}</span></div>
+            ${hasThickness ? `<div class="flex justify-between"><span class="text-slate-500">${thicknessLabel}</span> <span class="font-semibold text-slate-800">${p.thicknessOptions.join(', ')}</span></div>` : ''}
+            ${hasColors ? `<div class="flex justify-between"><span class="text-slate-500">${colorsLabel}</span> <span class="font-semibold text-slate-800">${p.colors.join(', ')}</span></div>` : ''}
+            ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">${sizeLabel}</span> <span class="font-semibold text-slate-800">${p.sheetSize || '-'}</span></div>` : ''}
+            ${hasSheetSpecs ? `<div class="flex justify-between"><span class="text-slate-500">${weightLabel}</span> <span class="font-semibold text-slate-800">${p.sheetWeight || '-'}</span></div>` : ''}
+            <div class="flex justify-between"><span class="text-slate-500">${unitLabel}</span> <span class="font-semibold text-slate-800">${isMr ? 'प्रति ' + unitDisplay : 'Per ' + unitDisplay}</span></div>
           </div>
         </div>
 
         <div>
           <div class="flex justify-between items-baseline pt-3 border-t border-slate-100 mb-3">
-            <span class="text-xs text-slate-500">Rate:</span>
-            <span class="text-xl font-black text-slate-900">${rate > 0 ? '₹' + rate : 'Contact'} <span class="text-xs font-normal text-slate-500">/ ${p.unit || 'kg'}</span></span>
+            <span class="text-xs text-slate-500">${rateLabel}</span>
+            <span class="text-xl font-black text-slate-900">${rate > 0 ? '₹' + rate : contactText} <span class="text-xs font-normal text-slate-500">/ ${unitDisplay}</span></span>
           </div>
 
-          <a href="https://wa.me/919767228008?text=${encodeURIComponent(`Hi Gajanan Traders, I want to check stock and price for ${p.name}.`)}" target="_blank" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
-            <i class="fa-brands fa-whatsapp text-sm"></i> ${currentLang === 'mr' ? 'व्हॉट्सॲपवर दर मागवा' : 'WhatsApp Price Quote'}
+          <a href="https://wa.me/919767228008?text=${encodeURIComponent(waMsg)}" target="_blank" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
+            <i class="fa-brands fa-whatsapp text-sm"></i> ${waBtnText}
           </a>
         </div>
       </div>
@@ -261,7 +489,8 @@ async function loadPublicProducts() {
   if (initialProducts.length === 0) {
     initialProducts = FALLBACK_PRODUCTS;
   }
-  renderProductCards(initialProducts);
+  cachedProductsList = initialProducts;
+  renderProductCards(cachedProductsList);
 
   // 2. Fetch fresh products from server in background and re-render if updated
   try {
@@ -269,8 +498,9 @@ async function loadPublicProducts() {
     if (res.ok) {
       const liveProducts = await res.json();
       if (Array.isArray(liveProducts) && liveProducts.length > 0) {
+        cachedProductsList = liveProducts;
         localStorage.setItem('gt_public_products', JSON.stringify(liveProducts));
-        renderProductCards(liveProducts);
+        renderProductCards(cachedProductsList);
       }
     }
   } catch (err) {
@@ -278,111 +508,7 @@ async function loadPublicProducts() {
   }
 }
 
-// Live Roofing Sheet Calculator logic
-function setupCalculator() {
-  const brandSelect = document.getElementById('calcBrand');
-  const lengthInput = document.getElementById('calcLength');
-  const qtyInput = document.getElementById('calcQty');
-  const thicknessSelect = document.getElementById('calcThickness');
-  const colorSelect = document.getElementById('calcColor');
-  const whatsappBtn = document.getElementById('calcWhatsAppBtn');
-
-  if (!brandSelect || !lengthInput || !qtyInput) return;
-
-  function calculate() {
-    const selectedOption = brandSelect.options[brandSelect.selectedIndex];
-    const rate = parseFloat(selectedOption.getAttribute('data-rate')) || 60;
-    const length = parseFloat(lengthInput.value) || 0;
-    const qty = parseInt(qtyInput.value) || 0;
-    const width = 3.5; // Standard trapezoidal sheet coverage width
-
-    const totalSqFt = length * width * qty;
-    // Approx weight calculation: 0.45mm sheet is approx 3.8 kg / sq meter (~0.38 kg / sq ft)
-    const approxWeightKg = Math.round(totalSqFt * 0.38);
-    const baseCost = Math.round(totalSqFt * rate);
-    const gstCost = Math.round(baseCost * 0.18);
-    const grandTotal = baseCost + gstCost;
-
-    document.getElementById('resTotalSqFt').textContent = `${totalSqFt.toFixed(1)} Sq Ft`;
-    document.getElementById('resApproxWeight').textContent = `~${approxWeightKg} Kg`;
-    document.getElementById('resBaseCost').textContent = `₹${baseCost.toLocaleString('en-IN')}`;
-    document.getElementById('resGst').textContent = `₹${gstCost.toLocaleString('en-IN')}`;
-    document.getElementById('resGrandTotal').textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
-  }
-
-  [brandSelect, lengthInput, qtyInput, thicknessSelect, colorSelect].forEach(el => {
-    if (el) el.addEventListener('input', calculate);
-  });
-
-  calculate();
-
-  if (whatsappBtn) {
-    whatsappBtn.addEventListener('click', async () => {
-      const brand = brandSelect.value;
-      const length = lengthInput.value;
-      const qty = qtyInput.value;
-      const thickness = thicknessSelect.value;
-      const color = colorSelect.value;
-      const totalSqFt = document.getElementById('resTotalSqFt').textContent;
-      const grandTotal = document.getElementById('resGrandTotal').textContent;
-      const baseCost = parseFloat(document.getElementById('resBaseCost').textContent.replace(/[^0-9.]/g, '')) || 0;
-      const gstCost = parseFloat(document.getElementById('resGst').textContent.replace(/[^0-9.]/g, '')) || 0;
-      const totalNum = parseFloat(grandTotal.replace(/[^0-9.]/g, '')) || 0;
-
-      // Automatically record quotation request on server so admin sees it in history for lifetime
-      try {
-        await Promise.all([
-          fetch('/api/enquiries', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              customerName: 'Customer (Calculator Quote)',
-              phone: 'Online Website User',
-              city: 'Naigaon Bz',
-              brandPreference: brand,
-              message: `Calculated Specs: ${qty} Sheets of ${length} Ft (${color}, ${thickness}) - Total Area: ${totalSqFt} - Est. Total: ${grandTotal}`
-            })
-          }),
-          fetch('/api/quotations', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              customerName: 'Website Calculator Quote',
-              customerPhone: 'Online Lead',
-              items: [{
-                brand,
-                description: `${brand} Roofing Sheet (${color}, ${thickness}) - ${qty} Pcs @ ${length} Ft`,
-                quantity: qty,
-                sqft: totalSqFt,
-                rate: parseFloat(brandSelect.options[brandSelect.selectedIndex]?.getAttribute('data-rate')) || 60,
-                amount: baseCost
-              }],
-              subtotal: baseCost,
-              totalGst: gstCost,
-              grandTotal: totalNum,
-              status: 'Sent'
-            })
-          })
-        ]);
-      } catch (err) {
-        console.warn('Could not auto-save calculator enquiry:', err);
-      }
-
-      const msg = `Hello Gajanan Traders (Naigaon), I calculated my roofing requirement:
-- Brand: ${brand}
-- Color: ${color}
-- Thickness: ${thickness}
-- Sheet Specs: ${qty} Sheets of ${length} Ft Length (Total ${totalSqFt})
-- Estimated Amount: ${grandTotal}
-
-Please confirm final stock availability and delivery rate to my site.`;
-
-      window.open(`https://wa.me/919767228008?text=${encodeURIComponent(msg)}`, '_blank');
-    });
-  }
-}
-
-// Hero Quick Form logic
+// Hero Quick Form logic (100% WhatsApp inquiry)
 function setupHeroForm() {
   const form = document.getElementById('quickHeroForm');
   if (!form) return;
@@ -394,7 +520,7 @@ function setupHeroForm() {
     const thickness = document.getElementById('heroThickness').value;
     const phone = document.getElementById('heroPhone').value;
 
-    // Automatically record inquiry on server for admin history for lifetime
+    // Automatically record inquiry on server for admin history
     try {
       await fetch('/api/enquiries', {
         method: 'POST',
@@ -404,90 +530,17 @@ function setupHeroForm() {
           phone: phone,
           city: 'Naigaon Bz',
           brandPreference: brand,
-          message: `Quick Price Request: Brand ${brand}, Color ${color}, Thickness ${thickness}`
+          message: `Quick WhatsApp Inquiry: Brand ${brand}, Color ${color}, Thickness ${thickness}`
         })
       });
     } catch (err) {
       console.warn('Could not auto-save hero enquiry:', err);
     }
 
-    const msg = `Hi Gajanan Traders, my phone is ${phone}. I need a price quote for:
-- Brand: ${brand}
-- Color: ${color}
-- Thickness: ${thickness}
-
-Please send best price and delivery time for Naigaon location.`;
+    const msg = currentLang === 'mr'
+      ? `नमस्कार गजानन ट्रेडर्स, माझा मोबाईल क्रमांक ${phone} आहे. मला खालील साहित्याचे दर व माहिती हवी आहे:\n- ब्रँड / साहित्य: ${brand}\n- रंग: ${color}\n- जाडी: ${thickness}\n\nकृपया नायगाव बझारसाठी योग्य दर व डिलिव्हरीची माहिती पाठवा.`
+      : `Hi Gajanan Traders, my phone is ${phone}. I need a price quote for:\n- Brand: ${brand}\n- Color: ${color}\n- Thickness: ${thickness}\n\nPlease send best price and delivery time for Naigaon location.`;
 
     window.open(`https://wa.me/919767228008?text=${encodeURIComponent(msg)}`, '_blank');
-  });
-}
-
-// Public Online Enquiry submission
-function setupPublicEnquiryForm() {
-  const form = document.getElementById('publicEnquiryForm');
-  if (!form) return;
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const submitBtn = document.getElementById('enqSubmitBtn') || form.querySelector('button[type="submit"]');
-    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + (currentLang === 'mr' ? 'ईमेल पाठवत आहे...' : 'Sending to Email...');
-    }
-
-    const payload = {
-      customerName: document.getElementById('enqName').value.trim(),
-      phone: document.getElementById('enqPhone').value.trim(),
-      city: document.getElementById('enqCity').value.trim(),
-      brandPreference: document.getElementById('enqBrand').value,
-      message: document.getElementById('enqMessage').value.trim()
-    };
-
-    try {
-      // 1. Send email directly to gajanantraders93@gmail.com via FormSubmit
-      const emailPromise = fetch('https://formsubmit.co/ajax/gajanantraders93@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          _subject: `New Online Order Enquiry: ${payload.customerName} (${payload.phone})`,
-          'Customer Full Name': payload.customerName,
-          'Mobile / WhatsApp': payload.phone,
-          'City / Village': payload.city || 'Naigaon Bz',
-          'Brand Preference': payload.brandPreference,
-          'Requirement Details': payload.message || 'N/A',
-          _captcha: 'false',
-          _template: 'table'
-        })
-      }).catch(err => console.warn('Email dispatch warning:', err));
-
-      // 2. Save into ERP Admin Panel backend
-      const dbPromise = fetch('/api/enquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(err => console.warn('Database save warning:', err));
-
-      await Promise.allSettled([emailPromise, dbPromise]);
-
-      alert(currentLang === 'mr' 
-        ? 'धन्यवाद! तुमची ऑर्डर चौकशी थेट gajanantraders93@gmail.com वर पाठवली गेली आहे. आमची टीम लवकरच आपल्याशी संपर्क साधेल.' 
-        : 'Thank you! Your requirement has been sent directly to gajanantraders93@gmail.com and recorded. Our sales manager will contact you promptly.');
-      form.reset();
-    } catch (err) {
-      console.error(err);
-      alert(currentLang === 'mr'
-        ? 'कृपया थेट +91 9767228008 किंवा gajanantraders93@gmail.com वर संपर्क साधा.'
-        : 'Network error. Please call/WhatsApp +91 9767228008 or email gajanantraders93@gmail.com.');
-    } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHtml;
-      }
-    }
   });
 }

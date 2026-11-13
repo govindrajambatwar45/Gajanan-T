@@ -115,7 +115,7 @@
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
       <!-- Left: Dealer Text -->
       <div class="text-center md:text-left">
-        <span class="text-amber-400 font-semibold"><i class="fa-solid fa-medal mr-1"></i> Authorised Dealer:</span> TATA Shaktee | MS Pipe | MS Angle | Mangalam Welding Rod | All Types Fabrication Items
+        <span class="text-amber-400 font-semibold"><i class="fa-solid fa-medal mr-1"></i> <span id="txtTopAnnounceTitle">Authorised Dealer:</span></span> <span id="txtTopAnnounceText">TATA Shaktee | MS Pipe | MS Angle | Mangalam Welding Rod | All Types Fabrication Items</span>
       </div>
 
       <!-- Right: Language & Theme Customizer Controls -->
@@ -128,7 +128,7 @@
 
         <!-- Color Theme Customizer -->
         <div class="flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 text-[11px]">
-          <span class="text-slate-400 font-semibold mr-1"><i class="fa-solid fa-palette text-amber-400"></i> Theme:</span>
+          <span class="text-slate-400 font-semibold mr-1"><i class="fa-solid fa-palette text-amber-400"></i> <span id="txtThemeLabel">Theme:</span></span>
           <button onclick="switchTheme('theme-blue')" title="Steel Blue" class="w-4 h-4 rounded-full bg-blue-700 border border-white/60 hover:scale-110 transition"></button>
           <button onclick="switchTheme('theme-emerald')" title="Emerald Green" class="w-4 h-4 rounded-full bg-emerald-600 border border-white/60 hover:scale-110 transition"></button>
           <button onclick="switchTheme('theme-red')" title="Terracotta Red" class="w-4 h-4 rounded-full bg-red-700 border border-white/60 hover:scale-110 transition"></button>
@@ -138,7 +138,7 @@
         <!-- Call & Admin Links -->
         <div class="flex items-center gap-3">
           <a href="tel:+919767228008" class="hover:text-amber-400 font-medium"><i class="fa-solid fa-phone text-amber-400 mr-1"></i> +91 9767228008</a>
-          <a href="/admin.html" class="text-slate-400 hover:text-white underline text-xs"><i class="fa-solid fa-lock mr-1"></i> Admin Login</a>
+          <a href="/admin.html" class="text-slate-400 hover:text-white underline text-xs"><i class="fa-solid fa-lock mr-1"></i> <span id="txtTopAdmin">Admin Login</span></a>
         </div>
       </div>
     </div>
@@ -157,11 +157,9 @@
       
       <div class="hidden md:flex items-center space-x-6 text-sm font-semibold">
         <a href="#products" id="txtNavProducts" class="hover:text-blue-700 transition">Products</a>
-        <a href="/about-shop.html" class="text-blue-800 hover:text-blue-900 transition font-bold"><i class="fa-solid fa-store text-amber-500 mr-1"></i> About Shop</a>
+        <a href="/about-shop.html" id="txtNavAboutShop" class="text-blue-800 hover:text-blue-900 transition font-bold"><i class="fa-solid fa-store text-amber-500 mr-1"></i> About Shop</a>
         <a href="#owner" id="txtNavOwner" class="hover:text-blue-700 transition">About Owner</a>
         <a href="#manufacturing" id="txtNavMfg" class="hover:text-blue-700 transition">Custom Manufacturing</a>
-        <a href="#calculator" id="txtNavCalc" class="hover:text-blue-700 transition">Sheet Calculator</a>
-        <a href="#enquiry" id="txtNavEst" class="hover:text-blue-700 transition">Get Estimate</a>
         <a href="#location" id="txtNavLoc" class="hover:text-blue-700 transition">Contact & Location</a>
       </div>
 
@@ -192,29 +190,26 @@
         </p>
         
         <div class="flex flex-wrap gap-4 pt-2">
-          <a href="#calculator" class="bg-amber-400 hover:bg-amber-300 text-slate-950 px-6 py-3.5 rounded-xl font-extrabold text-base flex items-center gap-2 shadow-lg transition">
-            <i class="fa-solid fa-calculator"></i> <span id="txtHeroCalcBtn">Calculate Sheet Requirement</span>
-          </a>
-          <a href="https://wa.me/919767228008?text=Hi%20Gajanan%20Traders,%20please%20send%20me%20the%20latest%20price%20list%20for%20TATA%20and%20JSW%20roofing%20sheets." target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3.5 rounded-xl font-extrabold text-base flex items-center gap-2 shadow-lg transition">
+          <a href="https://wa.me/919767228008?text=Hi%20Gajanan%20Traders,%20please%20send%20me%20the%20latest%20price%20list%20for%20TATA%20and%20JSW%20roofing%20sheets." target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white px-7 py-3.5 rounded-xl font-extrabold text-base flex items-center gap-2 shadow-lg transition">
             <i class="fa-brands fa-whatsapp text-xl"></i> <span id="txtHeroWaBtn">Instant WhatsApp Quote</span>
           </a>
-          <a href="https://www.google.com/maps/search/?api=1&query=Gajanan+Traders+Naigaon+Maharashtra" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-3.5 rounded-xl font-bold text-sm flex items-center gap-2 border border-slate-600 transition">
+          <a href="https://www.google.com/maps/search/?api=1&query=Gajanan+Traders+Naigaon+Maharashtra" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3.5 rounded-xl font-bold text-sm flex items-center gap-2 border border-slate-600 transition">
             <i class="fa-solid fa-location-dot text-amber-400"></i> <span id="txtHeroLocBtn">Open Location</span>
           </a>
         </div>
 
         <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-700/60 text-center sm:text-left">
           <div>
-            <div class="text-2xl font-black text-amber-400">100%</div>
-            <div class="text-xs text-slate-300">Genuine Authorized Steel</div>
+            <div id="txtHeroStat1Num" class="text-2xl font-black text-amber-400">100%</div>
+            <div id="txtHeroStat1Label" class="text-xs text-slate-300">Genuine Authorized Steel</div>
           </div>
           <div>
-            <div class="text-2xl font-black text-amber-400">Custom</div>
-            <div class="text-xs text-slate-300">Color & Length Sizing</div>
+            <div id="txtHeroStat2Num" class="text-2xl font-black text-amber-400">Custom</div>
+            <div id="txtHeroStat2Label" class="text-xs text-slate-300">Color & Length Sizing</div>
           </div>
           <div>
-            <div class="text-2xl font-black text-amber-400">431709</div>
-            <div class="text-xs text-slate-300">Fast Naigaon Delivery</div>
+            <div id="txtHeroStat3Num" class="text-2xl font-black text-amber-400">431709</div>
+            <div id="txtHeroStat3Label" class="text-xs text-slate-300">Fast Naigaon Delivery</div>
           </div>
         </div>
       </div>
@@ -224,12 +219,12 @@
         <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl text-slate-900 bg-white">
           <div class="flex items-center justify-between border-b pb-3 mb-4">
             <h3 id="txtQuickInqTitle" class="font-extrabold text-slate-900 text-lg"><i class="fa-solid fa-layer-group text-blue-800 mr-2"></i>Quick Material Inquiry</h3>
-            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Available Now</span>
+            <span id="txtQuickInqBadge" class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Available Now</span>
           </div>
           
           <form id="quickHeroForm" class="space-y-4">
             <div>
-              <label id="lblBrand" class="block text-xs font-bold text-slate-700 mb-1">Select Brand</label>
+              <label id="lblBrand" class="block text-xs font-bold text-slate-700 mb-1">Select Brand / Item</label>
               <select id="heroBrand" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-semibold text-slate-800">
                 <option value="TATA Shaktee">TATA Shaktee (Authorised)</option>
                 <option value="AM/NS">AM/NS Roofing Sheet</option>
@@ -284,24 +279,24 @@
   <section class="bg-white py-8 border-b shadow-sm">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-4">
-        <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest">Authorised Distributorship & Manufacturing</span>
+        <span id="txtAuthBadgesHeader" class="text-xs font-extrabold text-slate-500 uppercase tracking-widest">Authorised Distributorship & Manufacturing</span>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-center text-center">
         <div class="p-4 border rounded-xl hover:border-blue-700 transition bg-slate-50">
           <div class="text-xl font-black text-blue-900 tracking-wider">TATA SHAKTEE</div>
-          <div class="text-xs font-bold text-slate-600">Authorised Dealer</div>
+          <div id="txtAuthSub1" class="text-xs font-bold text-slate-600">Authorised Dealer</div>
         </div>
         <div class="p-4 border rounded-xl hover:border-blue-700 transition bg-slate-50">
           <div class="text-xl font-black text-blue-700 tracking-wider">JINDAL STEEL</div>
-          <div class="text-xs font-bold text-slate-600">Panther & Sabrang Sheets</div>
+          <div id="txtAuthSub2" class="text-xs font-bold text-slate-600">Panther & Sabrang Sheets</div>
         </div>
         <div class="p-4 border rounded-xl hover:border-blue-700 transition bg-slate-50">
           <div class="text-xl font-black text-slate-800 tracking-wider">MANGALAM</div>
-          <div class="text-xs font-bold text-slate-600">Welding Rod</div>
+          <div id="txtAuthSub3" class="text-xs font-bold text-slate-600">Welding Rod</div>
         </div>
         <div class="p-4 border rounded-xl hover:border-blue-700 transition bg-slate-50">
           <div class="text-xl font-black text-amber-600 tracking-wider">FABRICATION</div>
-          <div class="text-xs font-bold text-slate-600">MS Pipe, Angle, Jali & More</div>
+          <div id="txtAuthSub4" class="text-xs font-bold text-slate-600">MS Pipe, Angle, Jali & More</div>
         </div>
       </div>
     </div>
@@ -311,7 +306,7 @@
   <section id="products" class="py-16 px-4">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-3xl mx-auto mb-12">
-        <span class="text-blue-800 text-xs font-black uppercase tracking-wider bg-blue-100 px-3 py-1 rounded-full">Our Product Range</span>
+        <span id="txtProductsBadge" class="text-blue-800 text-xs font-black uppercase tracking-wider bg-blue-100 px-3 py-1 rounded-full">Our Product Range</span>
         <h2 id="txtProductsTitle" class="text-3xl font-extrabold text-slate-900 mt-2">Our Complete Product Range</h2>
         <p id="txtProductsDesc" class="text-slate-600 mt-2">Roofing Sheets, MS Pipe, MS Angle, Welding Rod, Jali, Screws & All Types Fabrication Items available at our Naigaon shop.</p>
       </div>
@@ -333,14 +328,14 @@
               <img src="/assets/logo-gajanan-traders.jpg" alt="Gajanan Traders Logo" class="w-full h-full object-cover rounded-xl">
             </div>
             <div>
-              <span class="bg-amber-400 text-slate-950 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">Family-Owned Business</span>
-              <h4 class="font-black text-white text-base mt-2">Mr. Prakash Medewar (Founder)</h4>
-              <h4 class="font-black text-amber-400 text-base">& Mr. Pankaj Medewar (Owner)</h4>
-              <p class="text-xs text-slate-400 font-medium mt-1">Gajanan Traders • Over 35 Years of Trust</p>
+              <span id="txtOwnerCardBadge" class="bg-amber-400 text-slate-950 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">Family-Owned Business</span>
+              <h4 id="txtOwnerCardFounder" class="font-black text-white text-base mt-2">Mr. Prakash Medewar (Founder)</h4>
+              <h4 id="txtOwnerCardOwner" class="font-black text-amber-400 text-base">& Mr. Pankaj Medewar (Owner)</h4>
+              <p id="txtOwnerCardSub" class="text-xs text-slate-400 font-medium mt-1">Gajanan Traders • Over 35 Years of Trust</p>
             </div>
             <div class="pt-2 border-t border-slate-800">
               <a href="/owner.html" class="inline-flex items-center gap-2 bg-blue-800 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
-                <i class="fa-solid fa-user-tie"></i> View Founder & Owner Profiles <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                <i class="fa-solid fa-user-tie"></i> <span id="txtOwnerCardBtn">View Founder & Owner Profiles</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
               </a>
             </div>
           </div>
@@ -359,35 +354,35 @@
               "Welcome to Gajanan Traders! I am <strong class="text-slate-900">Mr. Pankaj Medewar</strong>, proprietor of Gajanan Traders in Naigaon Bz."
             </p>
             <p id="txtOwnerBio1">
-              For years, our shop near Uddhav Nagri has served contractors, farmers, residential homeowners, and commercial builders across Naigaon, Nanded, Umri, Degloor, and Biloli. As authorized dealers for premier steel manufacturers like TATA Shaktee, JSW Pragati, and Jindal Steel, we take pride in delivering 100% genuine, high-strength roofing sheets.
+              For years, our shop near Uddhav Nagri has served contractors, farmers, residential homeowners, and commercial builders across Naigaon, Nanded, Umri, Degloor, and Biloli. As authorized dealers for TATA Shaktee, we take pride in delivering 100% genuine, high-strength roofing sheets along with MS Pipe, MS Angle, Welding Rod and all types of fabrication items.
             </p>
             <p id="txtOwnerBio2">
-              Our in-house roll-forming factory produces custom color-coated trapezoidal sheets, tile profiles, and crimp curved sheets cut to your exact length specifications—eliminating wastage and saving money on your building project.
+              Our shop provides a complete range of steel and construction materials including roofing sheets from multiple brands, MS Pipe, MS Angle, MS Channels, Mangalam Welding Rods, Chain Link Jali, Weld Mesh Jali, Screws, Cutting Wheels and all types of fabrication items.
             </p>
           </div>
 
           <!-- Feature Bullets -->
           <div class="grid sm:grid-cols-2 gap-2.5 pt-1">
             <div class="flex items-center gap-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs font-extrabold text-slate-800">
-              <i class="fa-solid fa-certificate text-blue-800 text-sm"></i> Authorised TATA, JSW & Jindal Dealer
+              <i class="fa-solid fa-certificate text-blue-800 text-sm"></i> <span id="txtOwnerFeat1">Authorised TATA Shaktee Dealer</span>
             </div>
             <div class="flex items-center gap-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs font-extrabold text-slate-800">
-              <i class="fa-solid fa-scissors text-amber-500 text-sm"></i> Custom Length Cut & Roll-Forming
+              <i class="fa-solid fa-scissors text-amber-500 text-sm"></i> <span id="txtOwnerFeat2">Custom Length Cut & Sizing</span>
             </div>
             <div class="flex items-center gap-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs font-extrabold text-slate-800">
-              <i class="fa-solid fa-handshake text-emerald-600 text-sm"></i> Fair & Transparent Factory Rates
+              <i class="fa-solid fa-handshake text-emerald-600 text-sm"></i> <span id="txtOwnerFeat3">Fair & Transparent Rates</span>
             </div>
             <div class="flex items-center gap-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs font-extrabold text-slate-800">
-              <i class="fa-solid fa-truck-fast text-blue-800 text-sm"></i> Direct Site Delivery in Nanded District
+              <i class="fa-solid fa-truck-fast text-blue-800 text-sm"></i> <span id="txtOwnerFeat4">Direct Site Delivery in Nanded District</span>
             </div>
           </div>
 
           <div class="pt-2 flex flex-wrap gap-3">
             <a href="https://wa.me/919767228008?text=Hello%20Mr.%20Pankaj%20Medewar,%20I%20want%20to%20discuss%20a%20roofing%20sheet%20order." target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs inline-flex items-center gap-2 shadow transition">
-              <i class="fa-brands fa-whatsapp text-base"></i> Connect on WhatsApp
+              <i class="fa-brands fa-whatsapp text-base"></i> <span id="txtOwnerWaBtn">Connect on WhatsApp</span>
             </a>
             <a href="tel:+919767228008" class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs inline-flex items-center gap-2 shadow transition">
-              <i class="fa-solid fa-phone"></i> Call +91 9767228008
+              <i class="fa-solid fa-phone"></i> <span id="txtOwnerCallBtn">Call +91 9767228008</span>
             </a>
           </div>
         </div>
@@ -401,23 +396,23 @@
       <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl grid lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-7 space-y-4">
           <div class="inline-flex items-center gap-2 bg-amber-400 text-slate-950 text-xs font-black uppercase px-3 py-1 rounded-full">
-            <i class="fa-solid fa-award"></i> 35+ Years of Trust & Quality
+            <i class="fa-solid fa-award"></i> <span id="txtTrustBadge">35+ Years of Trust & Quality</span>
           </div>
-          <h2 class="text-2xl sm:text-4xl font-black leading-tight text-white">
+          <h2 id="txtTrustHeading" class="text-2xl sm:text-4xl font-black leading-tight text-white">
             TRUST UP TO 35 YEARS
           </h2>
-          <p class="text-amber-300 font-extrabold text-sm sm:text-base">
-            ३५ वर्षांचा अतूट विश्वास • गजानन ट्रेडर्स, नायगाव बझार
+          <p id="txtTrustSub" class="text-amber-300 font-extrabold text-sm sm:text-base">
+            35 Years of Unbroken Trust • Gajanan Traders, Naigaon Bz
           </p>
-          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+          <p id="txtTrustDesc" class="text-slate-300 text-xs sm:text-sm leading-relaxed">
             Founded and led by <strong>Mr. Prakash Medewar</strong> (Consulting Member) and managed with his son <strong>Mr. Pankaj Medewar</strong>, Gajanan Traders is a trusted family-owned business with over <strong>35 years of experience</strong> in Naigaon Bz, Nanded. With a strong commitment to trust, quality, and customer satisfaction, we continue our legacy of reliable service.
           </p>
           <div class="pt-2 flex flex-wrap gap-3">
             <a href="/about-shop.html" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-5 py-3 rounded-xl text-xs sm:text-sm shadow transition flex items-center gap-2">
-              <i class="fa-solid fa-store"></i> Explore Our Shop & Factory Photos
+              <i class="fa-solid fa-store"></i> <span id="txtTrustShopBtn">Explore Our Shop & Factory Photos</span>
             </a>
             <a href="https://wa.me/919767228008?text=Hello%20Gajanan%20Traders,%20I%20want%20to%20know%20more%20about%20your%20shop." target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-xl text-xs sm:text-sm shadow transition flex items-center gap-2">
-              <i class="fa-brands fa-whatsapp text-base"></i> Connect with Us
+              <i class="fa-brands fa-whatsapp text-base"></i> <span id="txtTrustWaBtn">Connect with Us</span>
             </a>
           </div>
         </div>
@@ -443,216 +438,56 @@
   <section id="manufacturing" class="bg-slate-900 text-white py-16 px-4">
     <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
       <div class="space-y-6">
-        <span class="bg-amber-400 text-slate-950 text-xs font-black uppercase px-3 py-1 rounded-full">Factory Manufacturing</span>
-        <h2 class="text-3xl sm:text-4xl font-black">Custom Color & Length Sheet Manufacturing</h2>
-        <p class="text-slate-300 leading-relaxed">
+        <span id="txtMfgBadge" class="bg-amber-400 text-slate-950 text-xs font-black uppercase px-3 py-1 rounded-full">Factory Manufacturing</span>
+        <h2 id="txtMfgTitle" class="text-3xl sm:text-4xl font-black">Custom Color & Length Sheet Manufacturing</h2>
+        <p id="txtMfgDesc" class="text-slate-300 leading-relaxed">
           Need a specific length to avoid wastage on your roof structure? Or matching color shade for architectural branding? At Gajanan Traders, our automated roll-forming machine manufactures precise lengths from 6 ft up to 30+ ft with customized color finishes.
         </p>
         
         <ul class="space-y-3 text-sm font-semibold">
-          <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-amber-400 text-lg"></i> Custom colors: Royal Blue, Tile Red, Mint Green, Caulfield Grey & dual shades.</li>
-          <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-amber-400 text-lg"></i> Zero wastage: Custom length cut according to your shed purlin spacing.</li>
-          <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-amber-400 text-lg"></i> Tile Profile & Crimp Curved bending options available for bungalows and verandas.</li>
-          <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-amber-400 text-lg"></i> C-Purlin & Z-Purlins for complete steel structural frame.</li>
+          <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-amber-400 text-lg"></i> <span id="txtMfgBullet1">Custom colors: Royal Blue, Tile Red, Mint Green, Caulfield Grey & dual shades.</span></li>
+          <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-amber-400 text-lg"></i> <span id="txtMfgBullet2">Zero wastage: Custom length cut according to your shed purlin spacing.</span></li>
+          <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-amber-400 text-lg"></i> <span id="txtMfgBullet3">Tile Profile & Crimp Curved bending options available for bungalows and verandas.</span></li>
+          <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-amber-400 text-lg"></i> <span id="txtMfgBullet4">C-Purlin & Z-Purlins for complete steel structural frame.</span></li>
         </ul>
 
         <div class="pt-2">
           <a href="https://wa.me/919767228008?text=Hi%20Gajanan%20Traders,%20I%20need%20custom%20color%20manufacturing%20details." target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3.5 rounded-xl font-black text-sm inline-flex items-center gap-2 shadow-md transition">
-            <i class="fa-brands fa-whatsapp text-lg"></i> Inquire Custom Color Manufacturing
+            <i class="fa-brands fa-whatsapp text-lg"></i> <span id="txtMfgBtn">Inquire Custom Color Manufacturing</span>
           </a>
         </div>
       </div>
 
       <!-- Color Swatches Visualizer -->
       <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 space-y-4">
-        <h3 class="font-extrabold text-lg text-white border-b border-slate-700 pb-3"><i class="fa-solid fa-palette text-amber-400 mr-2"></i> Popular Color Shade Options</h3>
+        <h3 class="font-extrabold text-lg text-white border-b border-slate-700 pb-3"><i class="fa-solid fa-palette text-amber-400 mr-2"></i> <span id="txtColorTitle">Popular Color Shade Options</span></h3>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center space-y-2">
             <div class="w-full h-12 rounded-lg bg-blue-700 shadow-md"></div>
-            <span class="text-xs font-bold text-slate-200 block">Royal Blue</span>
+            <span id="txtColorRoyalBlue" class="text-xs font-bold text-slate-200 block">Royal Blue</span>
           </div>
           <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center space-y-2">
             <div class="w-full h-12 rounded-lg bg-red-700 shadow-md"></div>
-            <span class="text-xs font-bold text-slate-200 block">Tile / Brick Red</span>
+            <span id="txtColorTileRed" class="text-xs font-bold text-slate-200 block">Tile / Brick Red</span>
           </div>
           <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center space-y-2">
             <div class="w-full h-12 rounded-lg bg-emerald-700 shadow-md"></div>
-            <span class="text-xs font-bold text-slate-200 block">Mint Green</span>
+            <span id="txtColorMintGreen" class="text-xs font-bold text-slate-200 block">Mint Green</span>
           </div>
           <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center space-y-2">
             <div class="w-full h-12 rounded-lg bg-slate-200 shadow-md"></div>
-            <span class="text-xs font-bold text-slate-200 block">Off-White</span>
+            <span id="txtColorOffWhite" class="text-xs font-bold text-slate-200 block">Off-White</span>
           </div>
           <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center space-y-2">
             <div class="w-full h-12 rounded-lg bg-slate-400 shadow-md"></div>
-            <span class="text-xs font-bold text-slate-200 block">Bare Galvalume</span>
+            <span id="txtColorGalvalume" class="text-xs font-bold text-slate-200 block">Bare Galvalume</span>
           </div>
           <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center space-y-2">
             <div class="w-full h-12 rounded-lg bg-amber-600 shadow-md"></div>
-            <span class="text-xs font-bold text-slate-200 block">Terracotta</span>
+            <span id="txtColorTerracotta" class="text-xs font-bold text-slate-200 block">Terracotta</span>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Interactive Roofing Sheet Calculator & Price Estimator -->
-  <section id="calculator" class="py-16 px-4 bg-slate-100">
-    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-3xl shadow-xl border border-slate-200">
-      <div class="text-center mb-8">
-        <span class="bg-blue-100 text-blue-800 text-xs font-black uppercase px-3 py-1 rounded-full">Interactive Estimator</span>
-        <h2 id="txtCalcTitle" class="text-3xl font-extrabold text-slate-900 mt-2">Roofing Sheet Requirement Calculator</h2>
-        <p id="txtCalcSub" class="text-slate-600 text-sm mt-1">Select your roof specs to get instant total square footage and estimate.</p>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Select Brand</label>
-            <select id="calcBrand" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-bold text-slate-800">
-              <option value="TATA Shaktee" data-rate="65">TATA Shaktee (Authorised)</option>
-              <option value="AM/NS" data-rate="60">AM/NS Roofing Sheet</option>
-              <option value="JINDAL Panther" data-rate="58" selected>JINDAL Panther</option>
-              <option value="JINDAL Sabrang" data-rate="55">JINDAL Sabrang</option>
-              <option value="TATA PRISMA" data-rate="62">TATA PRISMA</option>
-              <option value="TATA BLUSCOPE" data-rate="63">TATA BLUSCOPE</option>
-            </select>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Sheet Length (Feet)</label>
-              <input type="number" id="calcLength" value="12" min="1" max="40" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-bold text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Sheet Width (Feet)</label>
-              <input type="number" id="calcWidth" value="3.5" step="0.1" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-bold text-slate-800" readonly>
-              <span class="text-[10px] text-slate-500">Standard 3.5 ft width</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Number of Sheets</label>
-              <input type="number" id="calcQty" value="10" min="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-bold text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Sheet Thickness</label>
-              <select id="calcThickness" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-bold text-slate-800">
-                <option value="0.50 mm" selected>0.50 mm (Standard)</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Preferred Color</label>
-            <select id="calcColor" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-bold text-slate-800">
-              <option value="Royal Blue">Royal Blue</option>
-              <option value="Tile Red">Tile Red</option>
-              <option value="Mint Green">Mint Green</option>
-              <option value="Off-White">Off-White</option>
-              <option value="Bare Galvalume">Bare Galvalume Silver</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Result Box -->
-        <div class="bg-slate-900 text-white p-6 rounded-2xl flex flex-col justify-between space-y-4">
-          <div>
-            <div class="text-xs font-extrabold text-amber-400 uppercase tracking-wider mb-2">Estimation Summary</div>
-            
-            <div class="space-y-3">
-              <div class="flex justify-between border-b border-slate-800 pb-2">
-                <span class="text-xs text-slate-400">Total Area:</span>
-                <span id="resTotalSqFt" class="text-sm font-bold text-white">420.0 Sq Ft</span>
-              </div>
-              <div class="flex justify-between border-b border-slate-800 pb-2">
-                <span class="text-xs text-slate-400">Approx. Total Weight:</span>
-                <span id="resApproxWeight" class="text-sm font-bold text-white">~160 Kg</span>
-              </div>
-              <div class="flex justify-between border-b border-slate-800 pb-2">
-                <span class="text-xs text-slate-400">Base Material Cost:</span>
-                <span id="resBaseCost" class="text-sm font-bold text-white">₹24,360</span>
-              </div>
-              <div class="flex justify-between border-b border-slate-800 pb-2">
-                <span class="text-xs text-slate-400">Est. 18% GST Tax:</span>
-                <span id="resGst" class="text-sm font-bold text-white">₹4,385</span>
-              </div>
-            </div>
-
-            <div class="mt-6 pt-4 border-t border-slate-700">
-              <div class="text-xs text-slate-400">Estimated Total Amount:</div>
-              <div id="resGrandTotal" class="text-3xl font-black text-amber-400">₹28,745</div>
-              <span class="text-[10px] text-slate-400 block mt-1">* Final price subject to loading/transport at Naigaon shop</span>
-            </div>
-          </div>
-
-          <button id="calcWhatsAppBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg transition">
-            <i class="fa-brands fa-whatsapp text-xl"></i> Send Spec Quote to WhatsApp
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Online Enquiry Form -->
-  <section id="enquiry" class="py-16 px-4">
-    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-3xl shadow-lg border border-slate-200">
-      <div class="text-center max-w-2xl mx-auto mb-8">
-        <span class="bg-blue-100 text-blue-900 text-xs font-black uppercase px-3 py-1 rounded-full inline-flex items-center gap-1.5 shadow-sm">
-          <i class="fa-solid fa-envelope text-blue-700"></i> Delivered to: gajanantraders93@gmail.com
-        </span>
-        <h2 id="txtEnqTitle" class="text-3xl font-extrabold text-slate-900 mt-2">Submit Online Order Enquiry</h2>
-        <p class="text-slate-600 text-sm mt-1">Your inquiry is sent directly to <strong>gajanantraders93@gmail.com</strong>. Our sales manager will contact you promptly with official quotation & delivery details.</p>
-      </div>
-
-      <form id="publicEnquiryForm" action="https://formsubmit.co/gajanantraders93@gmail.com" method="POST" class="grid sm:grid-cols-2 gap-4">
-        <input type="hidden" name="_subject" value="New Website Order Enquiry - Gajanan Traders">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_template" value="table">
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
-          <input type="text" id="enqName" name="Full Name" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="e.g. Ramesh Patil" required>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Mobile / WhatsApp Number *</label>
-          <input type="tel" id="enqPhone" name="Mobile / WhatsApp" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="+91 9767228008" required>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Your City / Village Location</label>
-          <input type="text" id="enqCity" name="City / Village" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="e.g. Naigaon Bz, Nanded" value="Naigaon Bz">
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Preferred Brand</label>
-          <select id="enqBrand" name="Preferred Brand" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800">
-            <option value="TATA Shaktee">TATA Shaktee (Authorised)</option>
-            <option value="AM/NS">AM/NS</option>
-            <option value="JINDAL Panther">JINDAL Panther</option>
-            <option value="JINDAL Sabrang">JINDAL Sabrang</option>
-            <option value="TATA PRISMA">TATA PRISMA</option>
-            <option value="TATA BLUSCOPE">TATA BLUSCOPE</option>
-            <option value="MS Pipe / Angle">MS Pipe / Angle / Channel</option>
-            <option value="Mangalam Welding Rod">Mangalam Welding Rod</option>
-            <option value="Jali">Chain Link / Weld Mesh Jali</option>
-            <option value="Other">Other Items</option>
-          </select>
-        </div>
-
-        <div class="sm:col-span-2">
-          <label class="block text-xs font-bold text-slate-700 mb-1">Requirement Details (Quantity, Sheet Length, Color, Site Address)</label>
-          <textarea id="enqMessage" name="Requirement Details" rows="3" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-sm font-semibold text-slate-800" placeholder="Mention sheet length, number of pieces, or specific color matching requirement..."></textarea>
-        </div>
-
-        <div class="sm:col-span-2 text-center pt-3">
-          <button type="submit" id="enqSubmitBtn" class="bg-blue-800 hover:bg-blue-900 text-white font-extrabold px-10 py-3.5 rounded-xl text-base shadow-lg transition inline-flex items-center justify-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Submit Requirement (Send to Email)
-          </button>
-        </div>
-      </form>
     </div>
   </section>
 
@@ -660,31 +495,30 @@
   <section id="location" class="bg-slate-900 text-white py-16 px-4">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
       <div class="space-y-6">
-        <span class="bg-amber-400 text-slate-950 text-xs font-black uppercase px-3 py-1 rounded-full">Visit Our Shop</span>
+        <span id="txtLocBadge" class="bg-amber-400 text-slate-950 text-xs font-black uppercase px-3 py-1 rounded-full">Visit Our Shop</span>
         <h2 id="txtLocTitle" class="text-3xl sm:text-4xl font-black">Gajanan Traders - Location</h2>
         
         <div class="space-y-4 text-slate-300 text-sm">
           <div class="flex items-start gap-3">
             <i class="fa-solid fa-location-dot text-amber-400 text-xl mt-1"></i>
             <div>
-              <strong class="text-white text-base block">Shop Address:</strong>
-              Near Uddhav Nagri, Nanded Road, Naigaon Bz, <br>
-              Taluka Naigaon Kh, District Nanded, Maharashtra, PIN: 431709
+              <strong id="txtLocAddrLabel" class="text-white text-base block">Shop Address:</strong>
+              <span id="txtLocAddrVal">Near Uddhav Nagri, Nanded Road, Naigaon Bz, <br>Taluka Naigaon Kh, District Nanded, Maharashtra, PIN: 431709</span>
             </div>
           </div>
 
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-user-tie text-amber-400 text-xl"></i>
             <div>
-              <strong class="text-white text-base block">Proprietor:</strong>
-              Mr. Pankaj Medewar
+              <strong id="txtLocPropLabel" class="text-white text-base block">Proprietor:</strong>
+              <span id="txtLocPropVal">Mr. Pankaj Medewar</span>
             </div>
           </div>
 
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-phone text-amber-400 text-xl"></i>
             <div>
-              <strong class="text-white text-base block">Contact Numbers:</strong>
+              <strong id="txtLocPhoneLabel" class="text-white text-base block">Contact Numbers:</strong>
               <a href="tel:+919767228008" class="hover:text-amber-400">+91 9767228008</a>
             </div>
           </div>
@@ -692,7 +526,7 @@
           <div class="flex items-center gap-3">
             <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i>
             <div>
-              <strong class="text-white text-base block">WhatsApp Business:</strong>
+              <strong id="txtLocWaLabel" class="text-white text-base block">WhatsApp Business:</strong>
               <a href="https://wa.me/919767228008" target="_blank" class="hover:text-emerald-400">+91 9767228008</a>
             </div>
           </div>
@@ -700,8 +534,8 @@
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-clock text-amber-400 text-xl"></i>
             <div>
-              <strong class="text-white text-base block">Business Hours:</strong>
-              Monday - Saturday: 8:30 AM to 8:00 PM (Sunday: By Appointment)
+              <strong id="txtLocHoursLabel" class="text-white text-base block">Business Hours:</strong>
+              <span id="txtLocHoursVal">Monday - Saturday: 8:30 AM to 8:00 PM (Sunday: By Appointment)</span>
             </div>
           </div>
         </div>
@@ -715,13 +549,13 @@
 
       <!-- Location Card Visual -->
       <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 space-y-4">
-        <h3 class="font-extrabold text-lg text-white border-b border-slate-700 pb-3"><i class="fa-solid fa-truck-ramp-box text-amber-400 mr-2"></i> Local Delivery Area</h3>
-        <p class="text-xs text-slate-300">We supply and deliver direct to construction sites across:</p>
+        <h3 class="font-extrabold text-lg text-white border-b border-slate-700 pb-3"><i class="fa-solid fa-truck-ramp-box text-amber-400 mr-2"></i> <span id="txtDelivTitle">Local Delivery Area</span></h3>
+        <p id="txtDelivSub" class="text-xs text-slate-300">We supply and deliver direct to construction sites across:</p>
         <div class="grid grid-cols-2 gap-2 text-xs font-semibold text-slate-200">
-          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Naigaon Bz & Kh</div>
-          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Nanded City</div>
-          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Umri & Degloor</div>
-          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> Biloli & Kandhar</div>
+          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> <span id="txtDelivArea1">Naigaon Bz & Kh</span></div>
+          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> <span id="txtDelivArea2">Nanded City</span></div>
+          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> <span id="txtDelivArea3">Umri & Degloor</span></div>
+          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> <span id="txtDelivArea4">Biloli & Kandhar</span></div>
         </div>
       </div>
     </div>
@@ -731,14 +565,14 @@
   <footer class="bg-slate-950 text-slate-400 py-8 px-4 border-t border-slate-800 text-xs">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
       <div>
-        <strong class="text-white text-sm">GAJANAN TRADERS</strong> — Owner: Mr. Pankaj Medewar | Authorised Dealer of Tata Shaktee, MS Pipe, MS Angle, Mangalam Welding Rod & All Types Fabrication Items
-        <div class="text-[11px] text-slate-500 mt-1">Near Uddhav Nagri, Nanded Road, Naigaon Bz, Tq Naigaon Kh, Dist Nanded 431709.</div>
+        <div id="txtFooterMain"><strong class="text-white text-sm">GAJANAN TRADERS</strong> — Owner: Mr. Pankaj Medewar | Authorised Dealer of Tata Shaktee, MS Pipe, MS Angle, Mangalam Welding Rod & All Types Fabrication Items</div>
+        <div id="txtFooterAddr" class="text-[11px] text-slate-500 mt-1">Near Uddhav Nagri, Nanded Road, Naigaon Bz, Tq Naigaon Kh, Dist Nanded 431709.</div>
       </div>
       <div class="flex items-center gap-4">
-        <a href="/about-shop.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-store mr-1"></i> About Shop</a>
-        <a href="https://www.google.com/maps/search/?api=1&query=Gajanan+Traders+Naigaon+Maharashtra" target="_blank" class="text-amber-400 hover:underline"><i class="fa-solid fa-map-pin mr-1"></i> Gajanan Traders Google Maps</a>
-        <a href="/admin.html" class="text-slate-300 hover:text-white underline"><i class="fa-solid fa-user-shield mr-1"></i> Admin Portal</a>
-        <span>© 2026 Gajanan Traders. All Rights Reserved.</span>
+        <a href="/about-shop.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-store mr-1"></i> <span id="txtFooterAboutShop">About Shop</span></a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Gajanan+Traders+Naigaon+Maharashtra" target="_blank" class="text-amber-400 hover:underline"><i class="fa-solid fa-map-pin mr-1"></i> <span id="txtFooterMaps">Gajanan Traders Google Maps</span></a>
+        <a href="/admin.html" class="text-slate-300 hover:text-white underline"><i class="fa-solid fa-user-shield mr-1"></i> <span id="txtFooterAdmin">Admin Portal</span></a>
+        <span id="txtFooterCopy">© 2026 Gajanan Traders. All Rights Reserved.</span>
       </div>
     </div>
   </footer>
