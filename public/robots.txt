@@ -3,4 +3,5 @@ Allow: /
 Disallow: /admin.html
 Disallow: /api/
 
-Sitemap: https://gajanan-traders.com/sitemap.xml
+Sitemap: https://gajanantraders.shop/sitemap.xml
+Host: https://gajanantraders.shop
