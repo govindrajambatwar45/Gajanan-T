@@ -2,32 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://gajanantraders.shop/</loc>
+    <loc>https://www.gajanantraders.shop/</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://gajanantraders.shop/assets/logo-gajanan-traders.jpg</image:loc>
+      <image:loc>https://www.gajanantraders.shop/assets/logo-gajanan-traders.jpg</image:loc>
       <image:title>Gajanan Traders Naigaon Logo</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://gajanantraders.shop/about-shop.html</loc>
+    <loc>https://www.gajanantraders.shop/about-shop.html</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://gajanantraders.shop/assets/shop-overview-factory.jpg</image:loc>
+      <image:loc>https://www.gajanantraders.shop/assets/shop-overview-factory.jpg</image:loc>
       <image:title>Gajanan Traders Shop and Factory Naigaon Bz</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://gajanantraders.shop/owner.html</loc>
+    <loc>https://www.gajanantraders.shop/owner.html</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://gajanantraders.shop/assets/owner-pankaj-medewar.jpg</image:loc>
+      <image:loc>https://www.gajanantraders.shop/assets/owner-pankaj-medewar.jpg</image:loc>
       <image:title>Mr. Pankaj Medewar - Owner Gajanan Traders</image:title>
     </image:image>
   </url>
